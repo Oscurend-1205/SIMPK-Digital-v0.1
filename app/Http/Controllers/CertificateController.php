@@ -360,8 +360,8 @@ class CertificateController extends Controller
                 'tanggal_lahir_bayi' => 'Tanggal Lahir Bayi',
                 'tanggal_meninggal_bayi' => 'Tanggal Meninggal Bayi',
                 'jam_meninggal_bayi' => 'Jam Meninggal Bayi',
-                'penyebab_a_bayi' => 'Penyebab Kematian Utama (Bayi)',
-                'fucod_bayi' => 'FUCOD (Deskripsi)',
+                'penyebab_utama_bayi' => 'Penyebab Kematian Utama (Bayi)',
+                'icd_fucod_bayi' => 'Kode ICD FUCoD',
                 'nama_dokter' => 'Nama Dokter',
                 'nomor_sip' => 'Nomor SIP Dokter'
             ];

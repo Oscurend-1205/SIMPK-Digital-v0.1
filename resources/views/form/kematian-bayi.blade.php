@@ -261,6 +261,14 @@
             <input id="umur_ibu" class="form-input" type="number" min="0" placeholder="Ketik umur"/>
           </div>
           <div>
+            <label class="field-label">Agama Ibu</label>
+            <select id="agama_ibu" class="form-input">
+              <option value="">Pilih agama</option>
+              <option>Islam</option><option>Kristen</option><option>Katolik</option>
+              <option>Hindu</option><option>Budha</option><option>Konghucu</option>
+            </select>
+          </div>
+          <div>
             <label class="field-label">No. Rekam Medis Ibu</label>
             <input id="nrm_ibu" class="form-input" type="text" placeholder="Ketik atau pilih"/>
           </div>
@@ -395,6 +403,16 @@
             <div class="flex items-center gap-3 mt-1.5">
               <label class="radio-label"><input type="radio" name="resusitasi" value="Ya"/> Ya</label>
               <label class="radio-label"><input type="radio" name="resusitasi" value="Tidak" checked/> Tidak</label>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mt-3">
+          <div class="md:col-span-4">
+            <label class="field-label">Meninggal Saat</label>
+            <div class="flex items-center gap-4 mt-1.5">
+              <label class="radio-label"><input type="radio" name="meninggal_saat" value="Sebelum Lahir"/> Sebelum Lahir (Antepartum)</label>
+              <label class="radio-label"><input type="radio" name="meninggal_saat" value="Saat Lahir"/> Saat Lahir (Intrapartum)</label>
+              <label class="radio-label"><input type="radio" name="meninggal_saat" value="Setelah Lahir"/> Setelah Lahir (Postpartum)</label>
             </div>
           </div>
         </div>
@@ -774,6 +792,80 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+  // --- Automatic Meninggal Saat & Lahir Mati Synchronizer ---
+  const umurHariInput = document.getElementById('umur_hari');
+  const umurBulanInput = document.getElementById('umur_bulan');
+  const umurTahunInput = document.getElementById('umur_tahun');
+  const lahirMatiRadios = document.querySelectorAll('input[name="lahir_mati"]');
+  const meninggalSaatRadios = document.querySelectorAll('input[name="meninggal_saat"]');
+
+  function syncUmurAndMeninggalSaat() {
+    if (isFinalSubmitted) return;
+
+    let hasAge = false;
+    if (umurHariInput && umurHariInput.value !== '' && parseFloat(umurHariInput.value) >= 0) hasAge = true;
+    if (umurBulanInput && umurBulanInput.value !== '' && parseFloat(umurBulanInput.value) >= 0) hasAge = true;
+    if (umurTahunInput && umurTahunInput.value !== '' && parseFloat(umurTahunInput.value) >= 0) hasAge = true;
+
+    const selectedLahirMati = document.querySelector('input[name="lahir_mati"]:checked')?.value;
+
+    if (hasAge) {
+      // Auto check Lahir Mati = "Tidak"
+      const tidakRadio = document.querySelector('input[name="lahir_mati"][value="Tidak"]');
+      if (tidakRadio && !tidakRadio.checked) {
+        tidakRadio.checked = true;
+        tidakRadio.dispatchEvent(new Event('change'));
+      }
+      // Auto check Meninggal Saat = "Setelah Lahir"
+      const setelahLahirRadio = document.querySelector('input[name="meninggal_saat"][value="Setelah Lahir"]');
+      if (setelahLahirRadio && !setelahLahirRadio.checked) {
+        setelahLahirRadio.checked = true;
+        setelahLahirRadio.dispatchEvent(new Event('change'));
+      }
+    } else if (selectedLahirMati === 'Ya') {
+      // Auto select "Sebelum Lahir" as default stillbirth type if neither is checked
+      const antepartumRadio = document.querySelector('input[name="meninggal_saat"][value="Sebelum Lahir"]');
+      const intrapartumRadio = document.querySelector('input[name="meninggal_saat"][value="Saat Lahir"]');
+      if (antepartumRadio && !antepartumRadio.checked && (!intrapartumRadio || !intrapartumRadio.checked)) {
+        antepartumRadio.checked = true;
+        antepartumRadio.dispatchEvent(new Event('change'));
+      }
+      // Clear live age inputs if stillbirth
+      if (umurHariInput && umurHariInput.value !== '') { umurHariInput.value = ''; umurHariInput.dispatchEvent(new Event('input')); }
+      if (umurBulanInput && umurBulanInput.value !== '') { umurBulanInput.value = ''; umurBulanInput.dispatchEvent(new Event('input')); }
+      if (umurTahunInput && umurTahunInput.value !== '') { umurTahunInput.value = ''; umurTahunInput.dispatchEvent(new Event('input')); }
+    } else if (selectedLahirMati === 'Tidak') {
+      // Auto check Meninggal Saat = "Setelah Lahir"
+      const setelahLahirRadio = document.querySelector('input[name="meninggal_saat"][value="Setelah Lahir"]');
+      if (setelahLahirRadio && !setelahLahirRadio.checked) {
+        setelahLahirRadio.checked = true;
+        setelahLahirRadio.dispatchEvent(new Event('change'));
+      }
+    }
+  }
+
+  if (umurHariInput) umurHariInput.addEventListener('input', syncUmurAndMeninggalSaat);
+  if (umurBulanInput) umurBulanInput.addEventListener('input', syncUmurAndMeninggalSaat);
+  if (umurTahunInput) umurTahunInput.addEventListener('input', syncUmurAndMeninggalSaat);
+  lahirMatiRadios.forEach(radio => radio.addEventListener('change', syncUmurAndMeninggalSaat));
+  meninggalSaatRadios.forEach(radio => radio.addEventListener('change', function() {
+    if (isFinalSubmitted) return;
+    if (this.checked && this.value === 'Setelah Lahir') {
+      const tidakRadio = document.querySelector('input[name="lahir_mati"][value="Tidak"]');
+      if (tidakRadio && !tidakRadio.checked) {
+        tidakRadio.checked = true;
+        tidakRadio.dispatchEvent(new Event('change'));
+      }
+    } else if (this.checked && (this.value === 'Sebelum Lahir' || this.value === 'Saat Lahir')) {
+      const yaRadio = document.querySelector('input[name="lahir_mati"][value="Ya"]');
+      if (yaRadio && !yaRadio.checked) {
+        yaRadio.checked = true;
+        yaRadio.dispatchEvent(new Event('change'));
+      }
+    }
+  }));
+  // --- End Automatic Synchronizer ---
+
   function updateStatus(label, color) {
     const badge = document.getElementById('status-badge');
     const text = badge.querySelector('span');
@@ -872,35 +964,22 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   window.saveDraft = function() {
-    let filledCount = 0;
-    let totalCount = 0;
-    formInputs.forEach(input => {
-      if(input.type !== 'checkbox' && input.type !== 'radio' && input.type !== 'hidden' && input.id !== 'no_sertifikat') {
-         totalCount++;
-         if(input.value.trim() !== '') filledCount++;
-      }
-    });
-
-    if (filledCount < totalCount * 0.3) {
-        showToast('Minimal 30% data harus terisi untuk menyimpan draf.', 'error');
-        return Promise.resolve(false);
-    }
-
     return saveDraftToServer('Draft');
   };
 
   window.submitFinal = function() {
-    let filledCount = 0;
-    let totalCount = 0;
-    formInputs.forEach(input => {
-      if(input.type !== 'checkbox' && input.type !== 'radio' && input.type !== 'hidden' && input.id !== 'no_sertifikat') {
-         totalCount++;
-         if(input.value.trim() !== '') filledCount++;
-      }
+    // Validasi: minimal poin Identitas Jenazah (Identitas Bayi) harus terisi
+    const identitasFields = ['nrm_bayi', 'nama_bayi', 'tanggal_lahir_bayi', 'tanggal_meninggal_bayi'];
+    const emptyIdentitas = identitasFields.filter(id => {
+      const el = document.getElementById(id);
+      return !el || el.value.trim() === '';
     });
 
-    if (filledCount < totalCount * 0.8) {
-       showToast('Mohon lengkapi minimal 80% data sebelum melakukan pengajuan final.', 'error');
+    if (emptyIdentitas.length > 0) {
+       showToast('Mohon lengkapi minimal poin "Identitas Jenazah" (Identitas Bayi) sebelum melakukan pengajuan final.', 'error');
+       // Scroll & focus ke field kosong pertama
+       const firstEmpty = document.getElementById(emptyIdentitas[0]);
+       if (firstEmpty) { firstEmpty.scrollIntoView({ behavior: 'smooth', block: 'center' }); firstEmpty.focus(); }
        return;
     }
 

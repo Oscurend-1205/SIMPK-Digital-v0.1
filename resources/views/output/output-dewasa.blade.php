@@ -15,7 +15,7 @@
             --ink:       #0c1924;
             --ink-mid:   #3d5166;
             --ink-lt:    #7a8fa0;
-            --rule:      #c8d6df;
+            --rule:      #64748b;
             --bg-cell:   #f4f8fa;
             --white:     #ffffff;
             --accent:    #b45309;
@@ -75,7 +75,7 @@
             background: var(--white);
             width: 210mm;
             min-height: 297mm;
-            padding: 14mm 16mm;
+            padding: 8mm 10mm;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -86,7 +86,7 @@
         /* ── HEADER ─────────────────────────────────────── */
         .doc-header {
             display: flex; justify-content: space-between;
-            align-items: flex-start; margin-bottom: 10px;
+            align-items: flex-start; margin-bottom: 6px;
         }
         .logo-block { display: flex; align-items: center; gap: 12px; }
         .logo-frame {
@@ -98,15 +98,15 @@
         }
         .logo-frame img { max-width: 100%; max-height: 100%; object-fit: contain; }
         .hospital-name {
-            font-size: 17px; font-weight: 800;
+            font-size: 20.4px; font-weight: 800;
             color: #00A1C5; letter-spacing: -.02em;
             text-transform: uppercase; line-height: 1; margin-bottom: 4px;
         }
-        .hospital-address { font-size: 8.5px; color: var(--ink-lt); line-height: 1.45; }
+        .hospital-address { font-size: 10.2px; color: var(--ink-lt); line-height: 1.45; }
         .form-number-box {
             border: 1.5px solid var(--ink);
             padding: 5px 10px;
-            font-size: 9px; font-weight: 700;
+            font-size: 10.8px; font-weight: 700;
             font-family: 'IBM Plex Mono', monospace;
             text-align: right; line-height: 1.6;
             background: var(--bg-cell);
@@ -114,35 +114,34 @@
 
         /* ── RULE ─────────────────────────────────────── */
         .double-rule {
-            margin: 8px 0 10px;
+            margin: 4px 0 6px;
             border: none;
-            border-top: 3px solid var(--ink);
-            box-shadow: 0 2px 0 var(--ink);
-            height: 5px;
+            border-top: 3px double var(--ink);
+            height: 4px;
         }
 
         /* ── TITLE BLOCK ──────────────────────────────── */
         .doc-title-block {
             border: 1.5px solid var(--ink);
-            padding: 6px 12px; margin-bottom: 10px;
+            padding: 6px 12px; margin-bottom: 6px;
             text-align: center; background: var(--bg-cell);
         }
         .doc-title {
-            font-size: 13px; font-weight: 800;
+            font-size: 15.6px; font-weight: 800;
             text-transform: uppercase; letter-spacing: .07em; line-height: 1.2;
         }
-        .doc-subtitle { font-size: 8.5px; color: var(--ink-lt); font-style: italic; margin-top: 1px; }
+        .doc-subtitle { font-size: 10.2px; color: var(--ink-lt); font-style: italic; margin-top: 1px; }
 
         /* ── SECTION HEADER ───────────────────────────── */
         .sec-head {
-            font-size: 8.5px; font-weight: 700;
+            font-size: 10.2px; font-weight: 700;
             text-transform: uppercase; letter-spacing: .08em;
             background: var(--ink); color: #fff;
             padding: 4px 8px; margin-bottom: 0;
             border-radius: 2px 2px 0 0;
         }
         .sec-head-light {
-            font-size: 8.5px; font-weight: 700;
+            font-size: 10.2px; font-weight: 700;
             text-transform: uppercase; letter-spacing: .08em;
             background: var(--bg-cell); color: var(--ink-mid);
             padding: 4px 8px; margin-bottom: 0;
@@ -155,7 +154,7 @@
         .form-table td {
             border: 1px solid var(--rule);
             padding: 4px 7px;
-            font-size: 9.5px;
+            font-size: 11.4px;
             vertical-align: middle;
         }
         .lbl { background: var(--bg-cell); font-weight: 600; color: var(--ink-mid); white-space: nowrap; }
@@ -163,25 +162,25 @@
         /* ── CHECKBOX ─────────────────────────────────── */
         .cb {
             display: inline-block;
-            width: 11px; height: 11px;
+            width: 13px; height: 13px;
             border: 1.5px solid var(--ink);
             vertical-align: middle;
             margin-right: 3px; position: relative;
         }
         .cb.on::after {
             content: '✓';
-            position: absolute; top: -5px; left: 0;
-            font-size: 11px; font-weight: 800; color: var(--ink);
+            position: absolute; top: -4px; left: 1px;
+            font-size: 13px; font-weight: 800; color: var(--ink);
         }
 
         /* ── 2-col grid ───────────────────────────────── */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px; }
 
         /* ── info panel ───────────────────────────────── */
         .info-panel {
             border: 1px solid var(--rule);
             padding: 7px 9px;
-            font-size: 9px;
+            font-size: 10.8px;
             background: var(--bg-cell);
         }
         .info-panel .kv { display: flex; gap: 4px; margin-bottom: 2px; }
@@ -193,43 +192,49 @@
             height: 58px;
             display: flex; align-items: center; justify-content: center;
         }
-        .age-val { font-size: 22px; font-weight: 800; color: #00A1C5; letter-spacing: -.03em; }
-        .age-unit { font-size: 8px; font-weight: 700; color: var(--ink-lt); text-transform: uppercase; margin-left: 4px; }
+        .age-val { font-size: 26.4px; font-weight: 800; color: #00A1C5; letter-spacing: -.03em; }
+        .age-unit { font-size: 9.6px; font-weight: 700; color: var(--ink-lt); text-transform: uppercase; margin-left: 4px; }
 
         /* ── FUCoD bar ───────────────────────────────── */
         .fucod-bar {
             display: flex; justify-content: space-between; align-items: center;
             border-left: 4px solid #00A1C5;
             background: #e6f6f9;
-            padding: 8px 12px; margin-bottom: 10px;
+            padding: 6px 12px; margin-bottom: 6px;
         }
-        .fucod-label { font-size: 7.5px; font-weight: 700; color: var(--ink-lt); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 2px; }
-        .fucod-val { font-size: 13px; font-weight: 800; color: var(--ink); text-transform: uppercase; }
+        .fucod-label { font-size: 9px; font-weight: 700; color: var(--ink-lt); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 2px; }
+        .fucod-val { font-size: 15.6px; font-weight: 800; color: var(--ink); text-transform: uppercase; }
         .fucod-icd { border-left: 1px solid var(--rule); padding-left: 12px; text-align: right; }
-        .fucod-icd-val { font-size: 20px; font-weight: 800; color: #00A1C5; font-family: 'IBM Plex Mono', monospace; }
+        .fucod-icd-val { font-size: 24px; font-weight: 800; color: #00A1C5; font-family: 'IBM Plex Mono', monospace; }
 
         /* ── SIGNATURE ────────────────────────────────── */
         .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; text-align: center; margin-top: 8px; }
-        .sig-role { font-size: 9px; font-weight: 700; text-transform: uppercase; color: var(--ink-lt); margin-bottom: 44px; letter-spacing: .05em; }
-        .sig-line { border-top: 1px solid #94a3b8; width: 160px; margin: 0 auto; }
-        .sig-name { font-size: 9.5px; font-weight: 800; text-transform: uppercase; margin-top: 3px; }
-        .sig-sub  { font-size: 8.5px; color: var(--ink-lt); font-style: italic; }
+        .sig-role { font-size: 10.8px; font-weight: 700; text-transform: uppercase; color: var(--ink-lt); margin-bottom: 70px; letter-spacing: .05em; }
+        .sig-line { border-top: 1.5px solid var(--rule); width: 160px; margin: 0 auto; }
+        .sig-name { font-size: 11.4px; font-weight: 800; text-transform: uppercase; margin-top: 3px; }
+        .sig-sub  { font-size: 10.2px; color: var(--ink-lt); font-style: italic; }
 
         /* ── FOOTER ───────────────────────────────────── */
         .doc-footer {
-            margin-top: 14px; padding-top: 6px;
+            margin-top: 8px; padding-top: 4px;
             border-top: 1px solid var(--rule);
             text-align: center;
-            font-size: 7px; font-weight: 700;
+            font-size: 8.4px; font-weight: 700;
             text-transform: uppercase; letter-spacing: .2em;
             color: var(--ink-lt);
         }
 
         /* ── PRINT ────────────────────────────────────── */
         @media print {
+            :root {
+                --rule: #000000 !important;
+                --ink-lt: #000000 !important;
+                --ink-mid: #000000 !important;
+                --bg-cell: #ffffff !important;
+            }
             @page {
                 size: A4 portrait;
-                margin: 0mm;
+                margin: 0;
             }
             html, body { 
                 background: #fff !important; 
@@ -237,13 +242,12 @@
                 padding: 0 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                color-adjust: exact !important;
             }
             .topbar { display: none !important; }
             .canvas-wrap { padding: 0 !important; margin: 0 !important; }
             main {
                 width: 210mm !important; height: 296mm !important; max-height: 296mm !important;
-                padding: 12mm 15mm !important; margin: 0 !important;
+                padding: 8mm 10mm !important; margin: 0 !important;
                 box-shadow: none !important; border: none !important;
                 overflow: hidden !important;
                 page-break-after: avoid !important;
@@ -254,7 +258,6 @@
             img {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                color-adjust: exact !important;
                 display: block !important;
             }
         }
@@ -282,7 +285,7 @@
         </button>
         <div id="save-status-container" style="display: flex; align-items: center;">
             @if($certificate->status !== 'Saved')
-            <button onclick="saveCertificate({{ $certificate->id }})" class="btn-nav btn-save-active" id="save-btn">
+            <button data-id="{{ $certificate->id }}" onclick="saveCertificate(this.getAttribute('data-id'))" class="btn-nav btn-save-active" id="save-btn">
                 <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                 Simpan ke Arsip
             </button>
@@ -326,7 +329,7 @@
             <div class="doc-subtitle">(Medical Certificate of Cause of Death for Adults)</div>
         </div>
 
-        <div style="margin-bottom:10px">
+        <div style="margin-bottom:6px">
             <div class="sec-head">1. Identitas Jenazah</div>
             <table class="form-table">
                 <tbody>
@@ -360,7 +363,7 @@
                     </tr>
                     <tr>
                         <td class="lbl">Alamat Lengkap</td>
-                        <td colspan="3" style="font-size:8.5px">
+                        <td colspan="3" style="font-size:10.2px">
                             {{ $certificate->data['alamat'] ?? '-' }}, Kel. {{ $certificate->data['kelurahan'] ?? '-' }}, Kec. {{ $certificate->data['kecamatan'] ?? '-' }}, {{ $certificate->data['kab_kota'] ?? '-' }}
                         </td>
                     </tr>
@@ -395,7 +398,7 @@
             <div>
                 <div class="sec-head-light">4. Kondisi Khusus (Wanita)</div>
                 <div class="info-panel" style="height:68px;display:flex;align-items:center">
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:9px">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:10.8px">
                         <div><span class="cb {{ isset($certificate->data['kondisi_hamil']) && $certificate->data['kondisi_hamil'] ? 'on' : '' }}"></span> Hamil</div>
                         <div><span class="cb {{ isset($certificate->data['kondisi_bersalin']) && $certificate->data['kondisi_bersalin'] ? 'on' : '' }}"></span> Bersalin</div>
                         <div><span class="cb {{ isset($certificate->data['kondisi_nifas']) && $certificate->data['kondisi_nifas'] ? 'on' : '' }}"></span> Nifas</div>
@@ -408,9 +411,22 @@
                 <div class="info-panel" style="height:68px;display:flex;flex-direction:column;justify-content:center;gap:5px">
                     <div class="kv"><span class="k">Lama Rawat</span><span>{{ $certificate->data['lama_rawat_hari'] ?? '0' }} Hari / {{ $certificate->data['lama_rawat_jam'] ?? '0' }} Jam</span></div>
                     <div>
-                        <span style="font-weight:600;color:var(--ink-mid);font-size:9px">Tempat Kematian: </span>
-                        <span class="cb {{ isset($certificate->data['tempat_meninggal_rs']) && $certificate->data['tempat_meninggal_rs'] ? 'on' : '' }}"></span><span style="font-size:9px"> Rumah Sakit &nbsp;</span>
-                        <span class="cb {{ isset($certificate->data['tempat_meninggal_rumah']) && $certificate->data['tempat_meninggal_rumah'] ? 'on' : '' }}"></span><span style="font-size:9px"> Rumah Tinggal</span>
+                        <span style="font-weight:600;color:var(--ink-mid);font-size:10.8px">Tempat Kematian: </span>
+                        @php
+                            $tempatMeninggal = '-';
+                            if (!empty($certificate->data['tempat_meninggal_rs']) && $certificate->data['tempat_meninggal_rs']) {
+                                $tempatMeninggal = 'Rumah Sakit';
+                            } elseif (!empty($certificate->data['tempat_meninggal_rumah']) && $certificate->data['tempat_meninggal_rumah']) {
+                                $tempatMeninggal = 'Rumah Tinggal';
+                            } elseif (!empty($certificate->data['tempat_meninggal_puskesmas']) && $certificate->data['tempat_meninggal_puskesmas']) {
+                                $tempatMeninggal = 'Puskesmas';
+                            } elseif (!empty($certificate->data['tempat_meninggal_rb']) && $certificate->data['tempat_meninggal_rb']) {
+                                $tempatMeninggal = 'Rumah Bersalin';
+                            } elseif (!empty($certificate->data['tempat_meninggal_lainnya']) && $certificate->data['tempat_meninggal_lainnya']) {
+                                $tempatMeninggal = $certificate->data['tempat_lainnya_ket'] ?? 'Lainnya';
+                            }
+                        @endphp
+                        <span style="font-size:10.8px;font-weight:500">{{ $tempatMeninggal }}</span>
                     </div>
                 </div>
             </div>
@@ -418,8 +434,8 @@
 
         <div class="grid-2">
             <div class="info-panel">
-                <div style="font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-lt);margin-bottom:5px">6. Dasar Diagnosis</div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:9px">
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-lt);margin-bottom:5px">6. Dasar Diagnosis</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:10.8px">
                     <div><span class="cb {{ isset($certificate->data['dasar_diagnosa_rm']) && $certificate->data['dasar_diagnosa_rm'] ? 'on' : '' }}"></span> Rekam Medis</div>
                     <div><span class="cb {{ isset($certificate->data['dasar_diagnosa_luar']) && $certificate->data['dasar_diagnosa_luar'] ? 'on' : '' }}"></span> Periksa Luar</div>
                     <div><span class="cb {{ isset($certificate->data['dasar_diagnosa_forensik']) && $certificate->data['dasar_diagnosa_forensik'] ? 'on' : '' }}"></span> Forensik</div>
@@ -427,16 +443,16 @@
                 </div>
             </div>
             <div class="info-panel" style="display:flex;flex-direction:column;justify-content:center">
-                <div style="font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-lt);margin-bottom:4px">7. Kelompok Penyebab Kematian</div>
-                <div style="font-size:10px;font-weight:700;color:#00A1C5;font-style:italic">{{ $certificate->data['kelompok'] ?? 'Tidak ditentukan' }}</div>
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-lt);margin-bottom:4px">7. Kelompok Penyebab Kematian</div>
+                <div style="font-size:12px;font-weight:700;color:#00A1C5;font-style:italic">{{ $certificate->data['kelompok'] ?? 'Tidak ditentukan' }}</div>
             </div>
         </div>
 
-        <div style="margin-bottom:10px">
+        <div style="margin-bottom:6px">
             <div class="sec-head-light">8. Penyebab Kematian (Cause of Death)</div>
             <table class="form-table">
                 <thead>
-                    <tr style="background:var(--bg-cell);text-align:center;font-size:8.5px;font-weight:700">
+                    <tr style="background:var(--bg-cell);text-align:center;font-size:10.2px;font-weight:700">
                         <td style="width:50%">I. Rangkaian Peristiwa Penyakit</td>
                         <td style="width:28%">II. Penyakit Kontribusi</td>
                         <td style="width:11%">Interval</td>
@@ -446,24 +462,24 @@
                 <tbody>
                     <tr>
                         <td><b style="color:var(--ink-mid);margin-right:4px">A</b>{{ $certificate->data['penyebab_a'] ?? '-' }}</td>
-                        <td rowspan="4" style="text-align:center;vertical-align:middle;font-style:italic;color:var(--ink-mid);font-size:9px">{{ $certificate->data['penyakit_lain'] ?? '-' }}</td>
-                        <td style="text-align:center;font-size:9px">{{ $certificate->data['selang_waktu_a'] ?? '-' }}</td>
-                        <td style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:9px">{{ $certificate->data['icd_a'] ?? '-' }}</td>
+                        <td rowspan="4" style="text-align:center;vertical-align:middle;font-style:italic;color:var(--ink-mid);font-size:10.8px">{{ $certificate->data['penyakit_lain'] ?? '-' }}</td>
+                        <td style="text-align:center;font-size:10.8px">{{ $certificate->data['selang_waktu_a'] ?? '-' }}</td>
+                        <td style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:10.8px">{{ $certificate->data['icd_a'] ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td><b style="color:var(--ink-mid);margin-right:4px">B</b>{{ $certificate->data['penyebab_b'] ?? '-' }}</td>
-                        <td style="text-align:center;font-size:9px">{{ $certificate->data['selang_waktu_b'] ?? '-' }}</td>
-                        <td style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:9px">{{ $certificate->data['icd_b'] ?? '-' }}</td>
+                        <td style="text-align:center;font-size:10.8px">{{ $certificate->data['selang_waktu_b'] ?? '-' }}</td>
+                        <td style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:10.8px">{{ $certificate->data['icd_b'] ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td><b style="color:var(--ink-mid);margin-right:4px">C</b>{{ $certificate->data['penyebab_c'] ?? '-' }}</td>
-                        <td style="text-align:center;font-size:9px">{{ $certificate->data['selang_waktu_c'] ?? '-' }}</td>
-                        <td style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:9px">{{ $certificate->data['icd_c'] ?? '-' }}</td>
+                        <td style="text-align:center;font-size:10.8px">{{ $certificate->data['selang_waktu_c'] ?? '-' }}</td>
+                        <td style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:10.8px">{{ $certificate->data['icd_c'] ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td><b style="color:var(--ink-mid);margin-right:4px">D</b>{{ $certificate->data['penyebab_d'] ?? '-' }}</td>
-                        <td style="text-align:center;font-size:9px">{{ $certificate->data['selang_waktu_d'] ?? '-' }}</td>
-                        <td style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:9px">{{ $certificate->data['icd_d'] ?? '-' }}</td>
+                        <td style="text-align:center;font-size:10.8px">{{ $certificate->data['selang_waktu_d'] ?? '-' }}</td>
+                        <td style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:10.8px">{{ $certificate->data['icd_d'] ?? '-' }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -482,7 +498,13 @@
     </div>
 
     <div>
-        <div class="sig-grid">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; text-align: center; margin-bottom: 2px;">
+            <div></div>
+            <div style="font-size:10.2px;color:var(--ink-lt);">
+                Malang, {{ isset($certificate->data['tanggal_ttd']) ? \Carbon\Carbon::parse($certificate->data['tanggal_ttd'])->translatedFormat('d F Y') : '-' }}
+            </div>
+        </div>
+        <div class="sig-grid" style="margin-top: 0px;">
             <div>
                 <div class="sig-role">Pihak Penerima / Keluarga Jenazah,</div>
                 <div class="sig-line"></div>
@@ -490,9 +512,6 @@
                 <div class="sig-sub">Hubungan: {{ $certificate->data['hubungan_jenazah'] ?? '-' }}</div>
             </div>
             <div>
-                <div style="font-size:8.5px;color:var(--ink-lt);margin-bottom:2px">
-                    Malang, {{ isset($certificate->data['tanggal_ttd']) ? \Carbon\Carbon::parse($certificate->data['tanggal_ttd'])->translatedFormat('d F Y') : '-' }}
-                </div>
                 <div class="sig-role">Dokter Penanggung Jawab,</div>
                 <div class="sig-line"></div>
                 <div class="sig-name">{{ $certificate->data['nama_dokter'] ?? 'Dr. ..................................' }}</div>

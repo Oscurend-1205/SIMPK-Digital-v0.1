@@ -836,35 +836,22 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   window.saveDraft = function() {
-    let filledCount = 0;
-    let totalCount = 0;
-    formInputs.forEach(input => {
-      if(input.type !== 'checkbox' && input.type !== 'radio' && input.type !== 'hidden' && input.id !== 'no_sertifikat') {
-         totalCount++;
-         if(input.value.trim() !== '') filledCount++;
-      }
-    });
-
-    if (filledCount < totalCount * 0.3) {
-        showToast('Minimal 30% data harus terisi untuk menyimpan draf.', 'error');
-        return Promise.resolve(false);
-    }
-
     return saveDraftToServer('Draft');
   };
 
   window.submitFinal = function() {
-    let filledCount = 0;
-    let totalCount = 0;
-    formInputs.forEach(input => {
-      if(input.type !== 'checkbox' && input.type !== 'radio' && input.type !== 'hidden' && input.id !== 'no_sertifikat') {
-         totalCount++;
-         if(input.value.trim() !== '') filledCount++;
-      }
+    // Validasi: minimal poin Identitas Jenazah harus terisi
+    const identitasFields = ['nrm', 'nama_lengkap', 'tanggal_lahir', 'alamat'];
+    const emptyIdentitas = identitasFields.filter(id => {
+      const el = document.getElementById(id);
+      return !el || el.value.trim() === '';
     });
 
-    if (filledCount < totalCount * 0.8) {
-       showToast('Mohon lengkapi minimal 80% data sebelum melakukan pengajuan final.', 'error');
+    if (emptyIdentitas.length > 0) {
+       showToast('Mohon lengkapi minimal poin "Identitas Jenazah" sebelum melakukan pengajuan final.', 'error');
+       // Scroll & focus ke field kosong pertama
+       const firstEmpty = document.getElementById(emptyIdentitas[0]);
+       if (firstEmpty) { firstEmpty.scrollIntoView({ behavior: 'smooth', block: 'center' }); firstEmpty.focus(); }
        return;
     }
 
