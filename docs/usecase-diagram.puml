@@ -1,0 +1,193 @@
+@startuml SIMPK-Digital-UseCase-Diagram
+
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam usecase {
+    BackgroundColor #E3F2FD
+    BorderColor #1976D2
+    ArrowColor #333333
+}
+skinparam actor {
+    BackgroundColor #FFCDD2
+    BorderColor #D32F2F
+}
+
+title SIMPK Digital - Use Case Diagram
+Sistem Informasi Medis Penyebab Kematian Digital
+
+' === AKTOR UTAMA ===
+actor "Petugas Rekam Medis" as PRM
+actor "Dokter" as DOK
+actor "Administrator" as ADM
+
+' === SUBSISTEM UTAMA ===
+package "Sistem Autentikasi" {
+    usecase "Login ke Sistem" as UC01
+    usecase "Logout dari Sistem" as UC02
+}
+
+package "Manajemen Sertifikat Kematian" {
+    usecase "Memilih Jenis Sertifikat" as UC03
+    usecase "Mengisi Form Kematian Dewasa" as UC04
+    usecase "Mengisi Form Kematian Bayi (Perinatal)" as UC05
+    usecase "Menyimpan Draft Sertifikat" as UC06
+    usecase "Melanjutkan/Edit Draft" as UC07
+    usecase "Menyelesaikan Sertifikat Final" as UC08
+    usecase "Memvalidasi Data Pasien (NIK/NRM)" as UC09
+    usecase "Validasi UCOD (Underlying Cause of Death)" as UC10
+    usecase "Menghapus Draft/Sertifikat" as UC11
+}
+
+package "Manajemen Dokumen & Arsip" {
+    usecase "Melihat Daftar Sertifikat" as UC12
+    usecase "Melihat Daftar Draft" as UC13
+    usecase "Pencarian Sertifikat" as UC14
+    usecase "Filter Sertifikat" as UC15
+    usecase "Pratinjau Sertifikat Dewasa" as UC16
+    usecase "Pratinjau Sertifikat Bayi" as UC17
+    usecase "Mencetak Sertifikat" as UC18
+}
+
+package "Manajemen Data Dokter" {
+    usecase "Mencari Data Dokter" as UC19
+    usecase "Menambah Data Dokter Baru" as UC20
+    usecase "Menghapus Data Dokter" as UC21
+}
+
+package "Pengaturan & Administrasi" {
+    usecase "Mengakses Menu Pengaturan" as UC22
+    usecase "Autentikasi Pengaturan (Password)" as UC23
+    usecase "Reset Aplikasi" as UC24
+    usecase "Melihat Log Aktivitas" as UC25
+}
+
+package "Manajemen Notifikasi" {
+    usecase "Melihat Pengumuman/Notifikasi" as UC26
+    usecase "Membuat Notifikasi Baru" as UC27
+    usecase "Menghapus Notifikasi" as UC28
+}
+
+' === RELASI ANTARA AKTOR DAN USE CASE ===
+
+' Petugas Rekam Medis
+PRM --> UC01
+PRM --> UC02
+PRM --> UC03
+PRM --> UC04
+PRM --> UC05
+PRM --> UC06
+PRM --> UC07
+PRM --> UC08
+PRM --> UC09
+PRM --> UC10
+PRM --> UC11
+PRM --> UC12
+PRM --> UC13
+PRM --> UC14
+PRM --> UC15
+PRM --> UC16
+PRM --> UC17
+PRM --> UC18
+PRM --> UC19
+PRM --> UC26
+
+' Dokter
+DOK --> UC01
+DOK --> UC02
+DOK --> UC04
+DOK --> UC05
+DOK --> UC06
+DOK --> UC07
+DOK --> UC08
+DOK --> UC12
+DOK --> UC13
+DOK --> UC14
+DOK --> UC18
+DOK --> UC26
+
+' Administrator
+ADM --> UC01
+ADM --> UC02
+ADM --> UC20
+ADM --> UC21
+ADM --> UC22
+ADM --> UC23
+ADM --> UC24
+ADM --> UC25
+ADM --> UC27
+ADM --> UC28
+ADM --> UC12
+ADM --> UC13
+
+' === RELASI ANTAR USE CASE (INCLUDE/EXTEND) ===
+
+UC03 ..> UC04 : <<extend>>
+UC03 ..> UC05 : <<extend>>
+
+UC04 ..> UC06 : <<include>>
+UC05 ..> UC06 : <<include>>
+
+UC04 ..> UC09 : <<include>>
+UC05 ..> UC09 : <<include>>
+
+UC04 ..> UC10 : <<include>>
+UC05 ..> UC10 : <<include>>
+
+UC08 ..> UC16 : <<include>>
+UC08 ..> UC17 : <<include>>
+
+UC16 ..> UC18 : <<extend>>
+UC17 ..> UC18 : <<extend>>
+
+UC22 ..> UC23 : <<include>>
+UC22 ..> UC24 : <<extend>>
+UC22 ..> UC20 : <<extend>>
+UC22 ..> UC21 : <<extend>>
+UC22 ..> UC25 : <<extend>>
+
+UC27 ..> UC23 : <<include>>
+
+UC12 ..> UC14 : <<extend>>
+UC12 ..> UC15 : <<extend>>
+UC13 ..> UC14 : <<extend>>
+
+note right of UC04
+  Formulir untuk pasien
+  dewasa dan anak-anak
+  dengan format standar
+  ICD-10
+end note
+
+note right of UC05
+  Formulir khusus untuk
+  kematian perinatal/
+  neonatal sesuai standar
+  rekam medis nasional
+end note
+
+note right of UC06
+  Auto-save data sementara
+  untuk memungkinkan
+  kelanjutan pengisian
+  di lain waktu
+end note
+
+note right of UC09
+  Validasi NIK/NRM untuk
+  mencegah duplikasi data
+  pasien
+end note
+
+note right of UC10
+  Validasi berjenjang:
+  - Penyebab Langsung
+  - Penyebab Antara
+  - Penyebab Dasar
+end note
+
+note right of UC24
+  Membersihkan data simulasi/
+  testing sebelum produksi
+end note
+
+@enduml

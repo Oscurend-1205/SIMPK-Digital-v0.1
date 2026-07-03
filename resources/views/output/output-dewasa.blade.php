@@ -154,8 +154,8 @@
         .form-table { width: 100%; border-collapse: collapse; }
         .form-table td {
             border: 1px solid var(--rule);
-            padding: 4px 7px;
-            font-size: 11.4px;
+            padding: 3px 6px;
+            font-size: 10.8px;
             vertical-align: middle;
         }
         .lbl { background: var(--bg-cell); font-weight: 600; color: var(--ink-mid); white-space: nowrap; }
@@ -163,7 +163,7 @@
         /* ── CHECKBOX ─────────────────────────────────── */
         .cb {
             display: inline-block;
-            width: 13px; height: 13px;
+            width: 12px; height: 12px;
             border: 1.5px solid var(--ink);
             vertical-align: middle;
             margin-right: 3px; position: relative;
@@ -171,16 +171,16 @@
         .cb.on::after {
             content: '✓';
             position: absolute; top: -4px; left: 1px;
-            font-size: 13px; font-weight: 800; color: var(--ink);
+            font-size: 12px; font-weight: 800; color: var(--ink);
         }
 
         /* ── 2-col grid ───────────────────────────────── */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; }
 
         /* ── info panel ───────────────────────────────── */
         .info-panel {
             border: 1px solid var(--rule);
-            padding: 7px 9px;
+            padding: 5px 8px;
             font-size: 10.8px;
             background: var(--bg-cell);
         }
@@ -190,11 +190,11 @@
         /* ── age display ─────────────────────────────── */
         .age-display {
             border: 1px solid var(--rule);
-            height: 58px;
+            height: 52px;
             display: flex; align-items: center; justify-content: center;
         }
-        .age-val { font-size: 26.4px; font-weight: 800; color: #00A1C5; letter-spacing: -.03em; }
-        .age-unit { font-size: 9.6px; font-weight: 700; color: var(--ink-lt); text-transform: uppercase; margin-left: 4px; }
+        .age-val { font-size: 24px; font-weight: 800; color: #00A1C5; letter-spacing: -.03em; }
+        .age-unit { font-size: 9px; font-weight: 700; color: var(--ink-lt); text-transform: uppercase; margin-left: 4px; }
 
         /* ── FUCoD bar ───────────────────────────────── */
         .fucod-bar {
@@ -206,18 +206,18 @@
         .fucod-label { font-size: 9px; font-weight: 700; color: var(--ink-lt); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 2px; }
         .fucod-val { font-size: 15.6px; font-weight: 800; color: var(--ink); text-transform: uppercase; }
         .fucod-icd { border-left: 1px solid var(--rule); padding-left: 12px; text-align: right; }
-        .fucod-icd-val { font-size: 24px; font-weight: 800; color: #00A1C5; font-family: 'IBM Plex Mono', monospace; }
+        .fucod-icd-val { font-size: 20px; font-weight: 800; color: #00A1C5; font-family: 'IBM Plex Mono', monospace; }
 
         /* ── SIGNATURE ────────────────────────────────── */
-        .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; text-align: center; margin-top: 8px; }
-        .sig-role { font-size: 10.8px; font-weight: 700; text-transform: uppercase; color: var(--ink-lt); margin-bottom: 70px; letter-spacing: .05em; }
+        .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; text-align: center; margin-top: 6px; }
+        .sig-role { font-size: 10.2px; font-weight: 700; text-transform: uppercase; color: var(--ink-lt); margin-bottom: 50px; letter-spacing: .05em; }
         .sig-line { border-top: 1.5px solid var(--rule); width: 160px; margin: 0 auto; }
         .sig-name { font-size: 11.4px; font-weight: 800; text-transform: uppercase; margin-top: 3px; }
         .sig-sub  { font-size: 10.2px; color: var(--ink-lt); font-style: italic; }
 
         /* ── FOOTER ───────────────────────────────────── */
         .doc-footer {
-            margin-top: 8px; padding-top: 4px;
+            margin-top: 6px; padding-top: 4px;
             border-top: 1px solid var(--rule);
             text-align: center;
             font-size: 8.4px; font-weight: 700;
@@ -355,7 +355,7 @@
                     </tr>
                     <tr>
                         <td class="lbl">Tanggal Lahir</td>
-                        <td>{{ isset($certificate->data['tanggal_lahir']) ? \Carbon\Carbon::parse($certificate->data['tanggal_lahir'])->translatedFormat('d F Y') : '-' }}</td>
+                        <td>{{ isset($certificate->data['tanggal_lahir']) && $certificate->data['tanggal_lahir'] ? \Carbon\Carbon::parse($certificate->data['tanggal_lahir'])->translatedFormat('d F Y') : '-' }}</td>
                         <td class="lbl">Status Kependudukan</td>
                         <td>
                             <span class="cb {{ isset($certificate->data['status_penduduk_tetap']) && $certificate->data['status_penduduk_tetap'] ? 'on' : '' }}"></span> Tetap &nbsp;
@@ -365,7 +365,7 @@
                     <tr>
                         <td class="lbl">Alamat Lengkap</td>
                         <td colspan="3" style="font-size:10.2px">
-                            {{ $certificate->data['alamat'] ?? '-' }}, Kel. {{ $certificate->data['kelurahan'] ?? '-' }}, Kec. {{ $certificate->data['kecamatan'] ?? '-' }}, {{ $certificate->data['kab_kota'] ?? '-' }}
+                            {{ $certificate->data['alamat'] ?? '-' }}{{ !empty($certificate->data['kelurahan']) ? ', Kel. ' . $certificate->data['kelurahan'] : '' }}{{ !empty($certificate->data['kecamatan']) ? ', Kec. ' . $certificate->data['kecamatan'] : '' }}{{ !empty($certificate->data['kab_kota']) ? ', ' . $certificate->data['kab_kota'] : '' }}{{ !empty($certificate->data['provinsi']) ? ', Prov. ' . $certificate->data['provinsi'] : '' }}
                         </td>
                     </tr>
                 </tbody>
@@ -378,7 +378,7 @@
                 <table class="form-table">
                     <tr>
                         <td class="lbl" style="width:45%">Hari / Tanggal</td>
-                        <td>{{ $certificate->data['hari_kematian'] ?? '-' }}, {{ isset($certificate->data['tanggal_kematian']) ? \Carbon\Carbon::parse($certificate->data['tanggal_kematian'])->translatedFormat('d M Y') : '-' }}</td>
+                        <td>{{ $certificate->data['hari_kematian'] ?? '-' }}, {{ isset($certificate->data['tanggal_kematian']) && $certificate->data['tanggal_kematian'] ? \Carbon\Carbon::parse($certificate->data['tanggal_kematian'])->translatedFormat('d M Y') : '-' }}</td>
                     </tr>
                     <tr>
                         <td class="lbl">Waktu Kematian</td>
@@ -396,9 +396,9 @@
         </div>
 
         <div class="grid-2">
-            <div>
+            <div style="display:flex;flex-direction:column">
                 <div class="sec-head-light">4. Kondisi Khusus (Wanita)</div>
-                <div class="info-panel" style="height:68px;display:flex;align-items:center">
+                <div class="info-panel" style="flex:1;min-height:62px;display:flex;align-items:center">
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:10.8px">
                         <div><span class="cb {{ isset($certificate->data['kondisi_hamil']) && $certificate->data['kondisi_hamil'] ? 'on' : '' }}"></span> Hamil</div>
                         <div><span class="cb {{ isset($certificate->data['kondisi_bersalin']) && $certificate->data['kondisi_bersalin'] ? 'on' : '' }}"></span> Bersalin</div>
@@ -407,10 +407,14 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <div style="display:flex;flex-direction:column">
                 <div class="sec-head-light">5. Lama Dirawat &amp; Tempat</div>
-                <div class="info-panel" style="height:68px;display:flex;flex-direction:column;justify-content:center;gap:5px">
-                    <div class="kv"><span class="k">Lama Rawat</span><span>{{ $certificate->data['lama_rawat_hari'] ?? '0' }} Hari / {{ $certificate->data['lama_rawat_jam'] ?? '0' }} Jam</span></div>
+                <div class="info-panel" style="flex:1;min-height:62px;display:flex;flex-direction:column;justify-content:center;gap:5px">
+                    <div class="kv">
+                        <span class="k">Lama Rawat</span>
+                        <span>{{ $certificate->data['lama_rawat_hari'] ?? '0' }} Hari / {{ $certificate->data['lama_rawat_jam'] ?? '0' }} Jam</span>
+                        <span style="margin-left: 10px; font-weight: 600;">DOA: {{ $certificate->data['doa'] ?? 'Tidak' }}</span>
+                    </div>
                     <div>
                         <span style="font-weight:600;color:var(--ink-mid);font-size:10.8px">Tempat Kematian: </span>
                         @php
@@ -436,11 +440,13 @@
         <div class="grid-2">
             <div class="info-panel">
                 <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-lt);margin-bottom:5px">6. Dasar Diagnosis</div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:10.8px">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 6px;font-size:10.2px">
                     <div><span class="cb {{ isset($certificate->data['dasar_diagnosa_rm']) && $certificate->data['dasar_diagnosa_rm'] ? 'on' : '' }}"></span> Rekam Medis</div>
                     <div><span class="cb {{ isset($certificate->data['dasar_diagnosa_luar']) && $certificate->data['dasar_diagnosa_luar'] ? 'on' : '' }}"></span> Periksa Luar</div>
                     <div><span class="cb {{ isset($certificate->data['dasar_diagnosa_forensik']) && $certificate->data['dasar_diagnosa_forensik'] ? 'on' : '' }}"></span> Forensik</div>
                     <div><span class="cb {{ isset($certificate->data['dasar_diagnosa_medis']) && $certificate->data['dasar_diagnosa_medis'] ? 'on' : '' }}"></span> Autopsi Medis</div>
+                    <div><span class="cb {{ isset($certificate->data['dasar_diagnosa_verbal']) && $certificate->data['dasar_diagnosa_verbal'] ? 'on' : '' }}"></span> Autopsi Verbal</div>
+                    <div><span class="cb {{ isset($certificate->data['dasar_diagnosa_lainnya']) && $certificate->data['dasar_diagnosa_lainnya'] ? 'on' : '' }}"></span> Keterangan Lainnya</div>
                 </div>
             </div>
             <div class="info-panel" style="display:flex;flex-direction:column;justify-content:center">
@@ -463,7 +469,12 @@
                 <tbody>
                     <tr>
                         <td><b style="color:var(--ink-mid);margin-right:4px">A</b>{{ $certificate->data['penyebab_a'] ?? '-' }}</td>
-                        <td rowspan="4" style="text-align:center;vertical-align:middle;font-style:italic;color:var(--ink-mid);font-size:10.8px">{{ $certificate->data['penyakit_lain'] ?? '-' }}</td>
+                        <td rowspan="4" style="text-align:center;vertical-align:middle;font-style:italic;color:var(--ink-mid);font-size:10.8px">
+                            {{ $certificate->data['penyakit_lain'] ?? '-' }}
+                            @if(isset($certificate->data['icd_penyerta']) && $certificate->data['icd_penyerta'])
+                                <br><br><span style="font-style:normal; font-weight:bold;">ICD: {{ $certificate->data['icd_penyerta'] }}</span>
+                            @endif
+                        </td>
                         <td style="text-align:center;font-size:10.8px">{{ $certificate->data['selang_waktu_a'] ?? '-' }}</td>
                         <td style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:10.8px">{{ $certificate->data['icd_a'] ?? '-' }}</td>
                     </tr>
@@ -502,7 +513,7 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; text-align: center; margin-bottom: 2px;">
             <div></div>
             <div style="font-size:10.2px;color:var(--ink-lt);">
-                Malang, {{ isset($certificate->data['tanggal_ttd']) ? \Carbon\Carbon::parse($certificate->data['tanggal_ttd'])->translatedFormat('d F Y') : '-' }}
+                Malang, {{ isset($certificate->data['tanggal_ttd']) && $certificate->data['tanggal_ttd'] ? \Carbon\Carbon::parse($certificate->data['tanggal_ttd'])->translatedFormat('d F Y') : '-' }}
             </div>
         </div>
         <div class="sig-grid" style="margin-top: 0px;">

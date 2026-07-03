@@ -132,6 +132,10 @@
     }
     .fab:hover { background: #0a5558; transform: scale(1.06); }
     .fab:active { transform: scale(.96); }
+
+    /* ── CLICKABLE METRIC CARDS ──────────────── */
+    a.metric-card { text-decoration: none; transition: transform 0.15s, box-shadow 0.15s; }
+    a.metric-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); cursor: pointer; }
 </style>
 </head>
 <body>
@@ -161,20 +165,20 @@
                     <div class="metric-lbl">This Month</div>
                 </div>
             </div>
-            <div class="metric-card">
+            <a href="/drafts" class="metric-card">
                 <div class="metric-icon orange"><i class="ph-bold ph-clock"></i></div>
                 <div>
                     <div class="metric-val orange">{{ number_format($pendingVerif) }}</div>
                     <div class="metric-lbl">Pending</div>
                 </div>
-            </div>
-            <div class="metric-card alert">
+            </a>
+            <a href="/certificates?doa=1" class="metric-card alert">
                 <div class="metric-icon red"><i class="ph-bold ph-warning"></i></div>
                 <div>
                     <div class="metric-val red">{{ number_format($doaDeaths) }}</div>
                     <div class="metric-lbl">DOA Deaths</div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Recent Certificates -->
@@ -198,9 +202,9 @@
                         @forelse($recentCertificates as $cert)
                         <tr>
                             <td class="td-cert">{{ $cert->nomor_sertifikat }}</td>
-                            <td class="td-name">{{ $cert->patient->nama_lengkap }}</td>
-                            <td class="td-muted">{{ $cert->waktu_meninggal->format('d/m/Y H:i') }}</td>
-                            <td class="td-muted">{{ $cert->doctor->nama_dokter }}</td>
+                            <td class="td-name">{{ $cert->patient?->nama_lengkap ?? '-' }}</td>
+                            <td class="td-muted">{{ $cert->waktu_meninggal?->format('d/m/Y H:i') ?? '-' }}</td>
+                            <td class="td-muted">{{ $cert->doctor?->nama_dokter ?? '-' }}</td>
                             <td class="td-center">
                                 @if($cert->status === 'Printed')
                                     <span class="badge badge-printed">Printed</span>

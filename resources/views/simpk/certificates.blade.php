@@ -370,20 +370,25 @@
         <div class="toolbar">
             <div class="search-box" id="search-box">
                 <i class="ph-bold ph-magnifying-glass"></i>
-                <input type="text" id="search-input" placeholder="Cari nama, no. sertifikat, NRM..." autocomplete="off"/>
+                <input type="text" id="search-input" placeholder="Cari nama, no. sertifikat, NRM..." autocomplete="off" value="{{ request('search') }}"/>
             </div>
 
             <select class="filter-select" id="filter-status">
-                <option value="all">Semua Status</option>
-                <option value="Saved">Tersimpan</option>
-                <option value="Printed">Tercetak</option>
-                <option value="Draft">Draft</option>
+                <option value="all" {{ request('status') === 'all' || !request()->has('status') ? 'selected' : '' }}>Semua Status</option>
+                <option value="Saved" {{ request('status') === 'Saved' ? 'selected' : '' }}>Tersimpan</option>
+                <option value="Printed" {{ request('status') === 'Printed' ? 'selected' : '' }}>Tercetak</option>
+                <option value="Draft" {{ request('status') === 'Draft' ? 'selected' : '' }}>Draft</option>
             </select>
 
             <select class="filter-select" id="filter-type">
-                <option value="all">Semua Jenis</option>
-                <option value="Dewasa">Dewasa</option>
-                <option value="Bayi">Bayi</option>
+                <option value="all" {{ request('type') === 'all' || !request()->has('type') ? 'selected' : '' }}>Semua Jenis</option>
+                <option value="Dewasa" {{ request('type') === 'Dewasa' ? 'selected' : '' }}>Dewasa</option>
+                <option value="Bayi" {{ request('type') === 'Bayi' ? 'selected' : '' }}>Bayi</option>
+            </select>
+
+            <select class="filter-select" id="filter-doa">
+                <option value="all" {{ request('doa') === 'all' || !request()->has('doa') ? 'selected' : '' }}>Semua Kematian</option>
+                <option value="1" {{ request('doa') === '1' ? 'selected' : '' }}>Hanya DOA</option>
             </select>
 
             <div class="toolbar-stats">
@@ -409,11 +414,12 @@
                 <tbody id="cert-body">
                     @forelse($certificates as $cert)
                     <tr data-status="{{ $cert->status }}" data-type="{{ $cert->jenis }}"
-                        data-search="{{ strtolower($cert->nomor_sertifikat . ' ' . $cert->patient->nama_lengkap . ' ' . $cert->patient->nrm) }}">
+                        data-doa="{{ (isset($cert->data['doa']) && $cert->data['doa'] === 'Ya') || (isset($cert->data['doa_bayi']) && $cert->data['doa_bayi'] === 'Ya') ? '1' : '0' }}"
+                        data-search="{{ strtolower($cert->nomor_sertifikat . ' ' . ($cert->patient?->nama_lengkap ?? '') . ' ' . ($cert->patient?->nrm ?? '')) }}">
                         <td class="td-cert-no">{{ $cert->nomor_sertifikat }}</td>
                         <td>
-                            <div class="td-name">{{ $cert->patient->nama_lengkap }}</div>
-                            <div class="td-rm">RM: {{ $cert->patient->nrm }}</div>
+                            <div class="td-name">{{ $cert->patient?->nama_lengkap ?? '-' }}</div>
+                            <div class="td-rm">RM: {{ $cert->patient?->nrm ?? '-' }}</div>
                         </td>
                         <td>
                             <span class="type-badge {{ strtolower($cert->jenis) === 'bayi' ? 'bayi' : '' }}">{{ $cert->jenis }}</span>
@@ -425,7 +431,7 @@
                                 <span style="color:var(--ink-lt)">—</span>
                             @endif
                         </td>
-                        <td class="td-muted">{{ $cert->doctor->nama_dokter }}</td>
+                        <td class="td-muted">{{ $cert->doctor?->nama_dokter ?? '-' }}</td>
                         <td class="td-center">
                             @if($cert->status === 'Printed')
                                 <span class="badge badge-printed">Tercetak</span>
@@ -444,7 +450,7 @@
 
                                 {{-- Download / Print --}}
                                 @if($cert->status !== 'Draft')
-                                    <button data-action="download" data-id="{{ $cert->id }}" data-jenis="{{ $cert->jenis }}" data-nama="{{ $cert->patient->nama_lengkap }}" class="action-btn download" title="Cetak / Save PDF">
+                                    <button data-action="download" data-id="{{ $cert->id }}" data-jenis="{{ $cert->jenis }}" data-nama="{{ $cert->patient?->nama_lengkap ?? 'Unknown' }}" class="action-btn download" title="Cetak / Save PDF">
                                         <i class="ph-bold ph-download-simple"></i>
                                     </button>
                                 @endif
@@ -455,7 +461,7 @@
                                 </a>
 
                                 {{-- Delete --}}
-                                <button data-action="delete" data-id="{{ $cert->id }}" data-nama="{{ $cert->patient->nama_lengkap }}" class="action-btn del" title="Hapus Sertifikat">
+                                <button data-action="delete" data-id="{{ $cert->id }}" data-nama="{{ $cert->patient?->nama_lengkap ?? 'Unknown' }}" class="action-btn del" title="Hapus Sertifikat">
                                     <i class="ph-bold ph-trash"></i>
                                 </button>
                             </div>
@@ -674,38 +680,59 @@
     const searchInput = document.getElementById('search-input');
     const filterStatus = document.getElementById('filter-status');
     const filterType = document.getElementById('filter-type');
+    const filterDoa = document.getElementById('filter-doa');
     const certBody = document.getElementById('cert-body');
     const visibleCount = document.getElementById('visible-count');
     const noResults = document.getElementById('no-results');
 
     function applyFilters() {
-        const query = searchInput.value.toLowerCase().trim();
+        const query = searchInput.value.trim();
         const statusFilter = filterStatus.value;
         const typeFilter = filterType.value;
-        const rows = certBody.querySelectorAll('tr[data-status]');
-        let count = 0;
-
-        rows.forEach(row => {
-            const matchSearch = !query || row.dataset.search.includes(query);
-            const matchStatus = statusFilter === 'all' || row.dataset.status === statusFilter;
-            const matchType = typeFilter === 'all' || row.dataset.type === typeFilter;
-            const visible = matchSearch && matchStatus && matchType;
-            row.style.display = visible ? '' : 'none';
-            if (visible) count++;
-        });
-
-        visibleCount.textContent = count;
-
-        // Show/hide no-results vs empty-row
-        const emptyRow = document.getElementById('empty-row');
-        if (rows.length > 0) {
-            noResults.style.display = count === 0 ? 'block' : 'none';
-        }
+        const doaFilter = filterDoa.value;
+        
+        let url = new URL(window.location.href);
+        
+        if (query) url.searchParams.set('search', query);
+        else url.searchParams.delete('search');
+        
+        if (statusFilter !== 'all') url.searchParams.set('status', statusFilter);
+        else url.searchParams.delete('status');
+        
+        if (typeFilter !== 'all') url.searchParams.set('type', typeFilter);
+        else url.searchParams.delete('type');
+        
+        if (doaFilter !== 'all') url.searchParams.set('doa', doaFilter);
+        else url.searchParams.delete('doa');
+        
+        // Reset to page 1 on new filter
+        url.searchParams.delete('page');
+        
+        window.location.href = url.toString();
     }
 
-    searchInput.addEventListener('input', applyFilters);
+    // Debounce function to prevent triggering applyFilters too often for search input
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Use enter key for search or debounce
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            applyFilters();
+        }
+    });
     filterStatus.addEventListener('change', applyFilters);
     filterType.addEventListener('change', applyFilters);
+    filterDoa.addEventListener('change', applyFilters);
 
     // ── Interactive CRUD Event Delegation ─────────
     certBody.addEventListener('click', function(e) {
@@ -783,13 +810,13 @@
                 document.getElementById('detail-cert-no').textContent = cert.nomor_sertifikat;
                 document.getElementById('detail-cert-type').textContent = cert.jenis;
                 document.getElementById('detail-cert-death-time').textContent = cert.waktu_meninggal;
-                document.getElementById('detail-cert-doctor').textContent = cert.doctor.nama_dokter + ' (' + cert.doctor.spesialisasi + ')';
+                document.getElementById('detail-cert-doctor').textContent = cert.doctor ? (cert.doctor.nama_dokter + ' (' + (cert.doctor.spesialisasi || 'Umum') + ')') : '-';
 
-                document.getElementById('detail-patient-name').textContent = cert.patient.nama_lengkap;
-                document.getElementById('detail-patient-nrm').textContent = cert.patient.nrm;
-                document.getElementById('detail-patient-nik').textContent = cert.patient.nik;
-                document.getElementById('detail-patient-gender').textContent = cert.patient.jenis_kelamin;
-                document.getElementById('detail-patient-address').textContent = cert.patient.alamat;
+                document.getElementById('detail-patient-name').textContent = cert.patient ? cert.patient.nama_lengkap : '-';
+                document.getElementById('detail-patient-nrm').textContent = cert.patient ? cert.patient.nrm : '-';
+                document.getElementById('detail-patient-nik').textContent = cert.patient ? cert.patient.nik : '-';
+                document.getElementById('detail-patient-gender').textContent = cert.patient ? cert.patient.jenis_kelamin : '-';
+                document.getElementById('detail-patient-address').textContent = cert.patient ? cert.patient.alamat : '-';
 
                 // Causes
                 const data = cert.data || {};

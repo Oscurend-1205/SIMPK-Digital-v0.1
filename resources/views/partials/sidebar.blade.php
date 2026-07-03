@@ -262,25 +262,10 @@
             <!-- Notifikasi Dropdown -->
             <div class="notif-dropdown" id="notif-dropdown" onclick="event.stopPropagation()">
                 <div class="notif-head">
-                    Notifikasi <span>Tandai dibaca</span>
+                    Notifikasi <span onclick="markNotifAsRead(event)">Tandai dibaca</span>
                 </div>
-                <div class="notif-body">
-                    <div class="notif-item">
-                        <div class="notif-icon"><i class="ph-bold ph-file-text"></i></div>
-                        <div class="notif-content">
-                            <div class="title">Sertifikat Baru</div>
-                            <div class="desc">Sertifikat atas nama Budi Santoso telah disimpan.</div>
-                            <div class="time">Baru saja</div>
-                        </div>
-                    </div>
-                    <div class="notif-item">
-                        <div class="notif-icon" style="background:#fff3e0; color:#e65100;"><i class="ph-bold ph-warning"></i></div>
-                        <div class="notif-content">
-                            <div class="title">Draft Tertunda</div>
-                            <div class="desc">Ada 3 draft sertifikat yang belum diselesaikan.</div>
-                            <div class="time">2 jam yang lalu</div>
-                        </div>
-                    </div>
+                <div class="notif-body" id="notif-body-list">
+                    <div class="p-4 text-center text-xs text-gray-500">Memuat notifikasi...</div>
                 </div>
             </div>
         </div>
@@ -304,7 +289,12 @@
     function toggleNotif(e) {
         if(e) e.stopPropagation();
         const dropdown = document.getElementById('notif-dropdown');
-        if(dropdown) dropdown.classList.toggle('show');
+        if(dropdown) {
+            dropdown.classList.toggle('show');
+            if(dropdown.classList.contains('show')) {
+                fetchNotifications();
+            }
+        }
     }
 
     // Tutup dropdown notif jika klik di luar
@@ -315,6 +305,79 @@
         }
     });
 
+    // ── NOTIFIKASI LOGIC ──
+    function fetchNotifications() {
+        const list = document.getElementById('notif-body-list');
+        fetch('/api/notifications')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.data.length > 0) {
+                    list.innerHTML = '';
+                    let hasUnread = false;
+                    const lastRead = localStorage.getItem('last_read_notif_time');
+
+                    data.data.forEach(notif => {
+                        const notifDate = new Date(notif.created_at);
+                        const isUnread = !lastRead || new Date(lastRead) < notifDate;
+                        if (isUnread) hasUnread = true;
+
+                        // Gunakan onclick yang mengarah ke halaman show
+                        list.innerHTML += `
+                            <div class="notif-item" onclick="window.location.href='/notifications/${notif.id}'" style="${isUnread ? 'background-color:#f0fdfa;' : ''}">
+                                <div class="notif-icon"><i class="ph-bold ph-info"></i></div>
+                                <div class="notif-content">
+                                    <div class="title">${notif.judul}</div>
+                                    <div class="desc line-clamp-2">${notif.keterangan}</div>
+                                    <div class="time">${notifDate.toLocaleString('id-ID')}</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    updateBadge(hasUnread);
+                } else {
+                    list.innerHTML = '<div class="p-4 text-center text-xs text-gray-500">Tidak ada pemberitahuan.</div>';
+                    updateBadge(false);
+                }
+            })
+            .catch(err => {
+                list.innerHTML = '<div class="p-4 text-center text-xs text-red-500">Gagal memuat.</div>';
+            });
+    }
+
+    function checkUnreadNotifications() {
+        fetch('/api/notifications')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.data.length > 0) {
+                    const lastRead = localStorage.getItem('last_read_notif_time');
+                    const latestNotif = new Date(data.data[0].created_at);
+                    const hasUnread = !lastRead || new Date(lastRead) < latestNotif;
+                    updateBadge(hasUnread);
+                } else {
+                    updateBadge(false);
+                }
+            });
+    }
+
+    function updateBadge(hasUnread) {
+        const badge = document.querySelector('.bell-badge');
+        if (badge) {
+            badge.style.display = hasUnread ? 'block' : 'none';
+        }
+    }
+
+    function markNotifAsRead(e) {
+        if(e) e.stopPropagation();
+        localStorage.setItem('last_read_notif_time', new Date().toISOString());
+        updateBadge(false);
+        fetchNotifications();
+    }
+
+    // Initialize check
+    setTimeout(checkUnreadNotifications, 500);
+
+    // ── CLOCK LOGIC ──
     function tickTopbarClock() {
         const clock = document.getElementById('topbar-clock');
         if (clock) {

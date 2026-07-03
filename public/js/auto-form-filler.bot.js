@@ -87,6 +87,16 @@
             'Low Birth Weight',
             'Congenital Malformation'
         ],
+        doaDiagnoses: [
+            'Sudden Cardiac Arrest (Henti Jantung Mendadak)',
+            'Multiple Trauma / Cedera Kepala Berat (Kecelakaan lalu lintas)',
+            'Dead on Arrival (DOA) / Unspecified Cause'
+        ],
+        doaIcdCodes: [
+            'I46.9',
+            'S06.9',
+            'R99'
+        ],
         intervals: ['2 jam', '5 jam', '1 hari', '3 hari', '1 minggu', '2 minggu', '1 bulan', '3 bulan', '1 tahun', '5 tahun']
     };
 
@@ -96,55 +106,199 @@
     const generateRM = () => Math.random().toString().slice(2, 4) + '-' + Math.random().toString().slice(4, 6) + '-' + Math.random().toString().slice(6, 8) + '-' + Math.random().toString().slice(8, 10);
 
     // 3. LOGIKA PENGISIAN FORMULIR
-    const fillForm = () => {
-        console.log('%c[Bot] Memulai pengisian data...', 'color: #1da1a6; font-weight: bold;');
+    const fillForm = (mode = 'normal') => {
+        console.log(`%c[Bot] Memulai pengisian data (${mode})...`, 'color: #1da1a6; font-weight: bold;');
         
+        const isBayiForm = document.getElementById('nama_bayi') !== null || document.getElementById('nrm_bayi') !== null;
         const inputs = document.querySelectorAll('input, select, textarea');
         let filledCount = 0;
+
+        const todayStr = new Date().toISOString().split('T')[0];
+        const randomName = getRandom(testData.names);
+        const randomDoctor = getRandom(testData.names);
 
         inputs.forEach(input => {
             if (input.disabled || input.readOnly || input.type === 'hidden' || input.id === 'no_sertifikat') return;
 
-            const id = input.id.toLowerCase();
-            const name = input.name.toLowerCase();
+            const id = input.id;
+            const name = input.name;
             const type = input.type;
 
-            // Logika berdasarkan ID atau Tipe
-            if (type === 'radio' || type === 'checkbox') {
-                // Pilih secara acak (50/50 chance for checkboxes)
-                if (Math.random() > 0.5 || type === 'radio') {
-                    input.checked = true;
-                    // Trigger event
-                    input.dispatchEvent(new Event('change', { bubbles: true }));
+            if (isBayiForm) {
+                // LOGIKA FORM BAYI
+                if (id === 'nama_bayi') {
+                    input.value = 'By. Ny. ' + randomName;
+                } else if (id === 'nrm_bayi') {
+                    input.value = generateRM();
+                } else if (name === 'gender_bayi') {
+                    input.checked = (input.value === 'Laki-laki');
+                } else if (id === 'tanggal_lahir_bayi') {
+                    const d = new Date();
+                    d.setDate(d.getDate() - getRandomInt(2, 5));
+                    input.value = d.toISOString().split('T')[0];
+                } else if (id === 'jam_lahir_bayi') {
+                    input.value = '06:30';
+                } else if (id === 'berat_badan_lahir') {
+                    input.value = getRandomInt(2500, 3800);
+                } else if (id === 'usia_kehamilan') {
+                    input.value = getRandomInt(37, 40);
+                } else if (id === 'tempat_meninggal_bayi') {
+                    input.value = 'Rumah Sakit';
+                } else if (id === 'tanggal_meninggal_bayi') {
+                    input.value = todayStr;
+                } else if (id === 'jam_meninggal_bayi') {
+                    input.value = '10:15';
+                } else if (id === 'lama_perawatan_bayi') {
+                    input.value = '2 hari';
+                } else if (name === 'doa_bayi') {
+                    input.checked = (mode === 'doa' ? (input.value === 'Ya') : (input.value === 'Tidak'));
+                } else if (name === 'resusitasi') {
+                    input.checked = (input.value === 'Tidak');
+                } else if (name === 'meninggal_saat') {
+                    input.checked = (input.value === 'Setelah Lahir');
+                } else if (name === 'kehamilan_kembar') {
+                    input.checked = (input.value === 'Tidak');
+                } else if (name === 'lahir_mati') {
+                    input.checked = (input.value === 'Tidak');
+                } else if (id === 'lama_bayi_bertahan_jam') {
+                    input.value = getRandomInt(2, 18);
+                } else if (id === 'umur_ibu') {
+                    input.value = getRandomInt(24, 38);
+                } else if (name === 'faktor_maternal') {
+                    input.checked = (input.value === 'M5');
+                } else if (id === 'faktor_maternal_m6_ket') {
+                    input.value = '';
+                } else if (id && id.startsWith('dasar_')) {
+                    // Checkbox dasar diagnosis
+                    input.checked = (id === 'dasar_rekam_medis' || id === 'dasar_pemeriksaan_bayi');
+                } else if (id === 'penyebab_utama_bayi') {
+                    input.value = mode === 'doa' ? 'Dead on Arrival' : 'Respiratory Distress Syndrome';
+                } else if (id === 'penyebab_antara_bayi') {
+                    input.value = mode === 'doa' ? '' : 'Asphyxia Neonatorum';
+                } else if (id === 'penyebab_dasar_bayi') {
+                    input.value = mode === 'doa' ? '' : 'Hyaline Membrane Disease';
+                } else if (id === 'penyebab_utama_ibu') {
+                    input.value = mode === 'doa' ? '' : 'Pre-eclampsia';
+                } else if (id === 'penyebab_pendukung_ibu') {
+                    input.value = '';
+                } else if (id === 'icd_penyebab_bayi') {
+                    input.value = mode === 'doa' ? 'R99' : 'P22.0';
+                } else if (id === 'icd_penyebab_maternal') {
+                    input.value = mode === 'doa' ? '' : 'O14.1';
+                } else if (id === 'nama_dokter') {
+                    input.value = 'dr. ' + randomDoctor + ', Sp.A';
+                } else if (id === 'nomor_sip') {
+                    input.value = 'SIP/' + getRandomInt(1000, 9999) + '/RSWH/2026';
+                } else if (id === 'tanggal_ttd') {
+                    input.value = todayStr;
+                } else {
+                    // Fallback
+                    if (type === 'checkbox' || type === 'radio') {
+                        // ignore
+                    } else {
+                        input.value = 'Test Bayi ' + getRandomInt(1, 100);
+                    }
                 }
-            } else if (input.tagName === 'SELECT') {
-                if (input.options.length > 1) {
-                    input.selectedIndex = getRandomInt(1, input.options.length - 1);
-                    input.dispatchEvent(new Event('change', { bubbles: true }));
-                }
-            } else if (type === 'date') {
-                const date = new Date();
-                date.setDate(date.getDate() - getRandomInt(0, 30));
-                input.value = date.toISOString().split('T')[0];
-            } else if (type === 'time') {
-                input.value = '08:00';
-            } else if (type === 'number') {
-                input.value = getRandomInt(1, 100);
             } else {
-                // Text, Textarea, etc.
-                if (id.includes('nik')) input.value = generateNIK();
-                else if (id.includes('nrm') || id.includes('rekam_medis')) input.value = generateRM();
-                else if (id.includes('nama') || id.includes('lengkap')) input.value = getRandom(testData.names);
-                else if (id.includes('alamat')) input.value = getRandom(testData.addresses);
-                else if (id.includes('icd')) input.value = getRandom(testData.icdCodes);
-                else if (id.includes('penyebab') || id.includes('diagnosa') || id.includes('fucod')) input.value = getRandom(testData.diagnoses);
-                else if (id.includes('selang_waktu')) input.value = getRandom(testData.intervals);
-                else if (id.includes('sip')) input.value = '446/' + getRandomInt(1000, 9999) + '/35.07.103/202' + getRandomInt(0, 4);
-                else if (id.includes('dokter')) input.value = 'dr. ' + getRandom(testData.names) + ', Sp.A';
-                else if (id.includes('kelurahan') || id.includes('kecamatan') || id.includes('kab')) input.value = 'Kepanjen';
-                else if (id.includes('telp') || id.includes('phone')) input.value = '0812' + Math.random().toString().slice(2, 10);
-                else if (id.includes('email')) input.value = 'test-' + getRandomInt(100, 999) + '@example.com';
-                else input.value = 'Test Data ' + getRandomInt(1, 100);
+                // LOGIKA FORM DEWASA
+                if (id === 'nrm') {
+                    input.value = generateRM();
+                } else if (id === 'nik') {
+                    input.value = generateNIK();
+                } else if (id === 'nama_lengkap') {
+                    input.value = randomName;
+                } else if (name === 'gender') {
+                    input.checked = (input.value === 'Laki-laki');
+                } else if (id === 'agama') {
+                    input.value = 'Islam';
+                } else if (id === 'tanggal_lahir') {
+                    const d = new Date();
+                    d.setFullYear(d.getFullYear() - getRandomInt(45, 75));
+                    input.value = d.toISOString().split('T')[0];
+                } else if (id === 'alamat') {
+                    input.value = getRandom(testData.addresses);
+                } else if (id === 'kelurahan' || id === 'kecamatan') {
+                    input.value = 'Kepanjen';
+                } else if (id === 'kab_kota') {
+                    input.value = 'Malang';
+                } else if (id === 'status_penduduk_tetap') {
+                    input.checked = true;
+                } else if (id === 'status_penduduk_bukan') {
+                    input.checked = false;
+                } else if (id === 'hari_kematian') {
+                    input.value = 'Rabu';
+                } else if (id === 'tanggal_kematian') {
+                    input.value = todayStr;
+                } else if (id === 'jam_kematian') {
+                    input.value = '23:45';
+                } else if (id === 'umur_tahun') {
+                    input.value = getRandomInt(45, 75);
+                } else if (id && id.startsWith('kondisi_')) {
+                    input.checked = false;
+                } else if (id === 'lama_rawat_jam') {
+                    input.value = '';
+                } else if (id === 'lama_rawat_hari') {
+                    input.value = getRandomInt(2, 5);
+                } else if (name === 'doa') {
+                    input.checked = (mode === 'doa' ? (input.value === 'Ya') : (input.value === 'Tidak'));
+                } else if (id && id.startsWith('tempat_meninggal_')) {
+                    input.checked = (id === 'tempat_meninggal_rs');
+                } else if (id === 'tempat_lainnya_ket') {
+                    input.value = '';
+                } else if (id && id.startsWith('dasar_diagnosa_')) {
+                    input.checked = (id === 'dasar_diagnosa_rm');
+                } else if (name === 'kelompok') {
+                    input.checked = (input.value === 'Penyakit tidak menular');
+                } else if (id === 'penyebab_a') {
+                    input.value = mode === 'doa' ? 'Dead on Arrival' : 'Acute Myocardial Infarction';
+                } else if (id === 'penyebab_b') {
+                    input.value = mode === 'doa' ? '' : 'Coronary Artery Disease';
+                } else if (id === 'penyebab_c') {
+                    input.value = mode === 'doa' ? '' : 'Hypertension';
+                } else if (id === 'penyebab_d') {
+                    input.value = mode === 'doa' ? '' : 'Diabetes Mellitus';
+                } else if (id === 'penyakit_lain') {
+                    input.value = mode === 'doa' ? '' : 'Chronic smoker';
+                } else if (id === 'selang_waktu_a') {
+                    input.value = mode === 'doa' ? '-' : '30 menit';
+                } else if (id === 'selang_waktu_b') {
+                    input.value = mode === 'doa' ? '' : '5 jam';
+                } else if (id === 'selang_waktu_c') {
+                    input.value = mode === 'doa' ? '' : '5 tahun';
+                } else if (id === 'selang_waktu_d') {
+                    input.value = mode === 'doa' ? '' : '10 tahun';
+                } else if (id === 'icd_a') {
+                    input.value = mode === 'doa' ? 'R99' : 'I21.9';
+                } else if (id === 'icd_b') {
+                    input.value = mode === 'doa' ? '' : 'I25.1';
+                } else if (id === 'icd_c') {
+                    input.value = mode === 'doa' ? '' : 'I10';
+                } else if (id === 'icd_d') {
+                    input.value = mode === 'doa' ? '' : 'E11.9';
+                } else if (id === 'icd_penyerta') {
+                    input.value = mode === 'doa' ? '' : 'F17.2';
+                } else if (id === 'fucod') {
+                    input.value = mode === 'doa' ? 'Dead on Arrival' : 'Acute Myocardial Infarction';
+                } else if (id === 'icd_fucod') {
+                    input.value = mode === 'doa' ? 'R99' : 'I21.9';
+                } else if (id === 'nama_dokter') {
+                    input.value = 'dr. ' + randomDoctor + ', Sp.PD';
+                } else if (id === 'nomor_sip') {
+                    input.value = 'SIP/' + getRandomInt(1000, 9999) + '/RSWH/2026';
+                } else if (id === 'tanggal_ttd') {
+                    input.value = todayStr;
+                } else if (id === 'nama_terang_penerima') {
+                    input.value = 'Ny. ' + randomName;
+                } else if (id === 'hubungan_jenazah') {
+                    input.value = 'Istri';
+                } else {
+                    // Fallback
+                    if (type === 'checkbox' || type === 'radio') {
+                        // ignore
+                    } else {
+                        input.value = 'Test Dewasa ' + getRandomInt(1, 100);
+                    }
+                }
             }
 
             // Trigger events untuk sinkronisasi framework (Vue/React/etc if any)
@@ -178,14 +332,14 @@
             font-family: 'Inter', sans-serif;
         `;
 
-        const btn = document.createElement('button');
-        btn.innerHTML = `
+        const btnNormal = document.createElement('button');
+        btnNormal.innerHTML = `
             <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
-                <div style="font-weight: 800; font-size: 12px; letter-spacing: 0.05em;">BOT FILL TEST DATA</div>
-                <div style="font-weight: 800; font-size: 12px; letter-spacing: 0.05em;">Testing Only</div>
+                <div style="font-weight: 800; font-size: 12px; letter-spacing: 0.05em;">BOT FILL NORMAL</div>
+                <div style="font-weight: 800; font-size: 10px; letter-spacing: 0.05em; opacity: 0.9;">Kematian Biasa</div>
             </div> 
         `;
-        btn.style.cssText = `
+        btnNormal.style.cssText = `
             background: #1da1a6;
             color: white;
             border: none;
@@ -198,10 +352,33 @@
             align-items: center;
             justify-content: center;
         `;
+        btnNormal.onmouseover = () => { btnNormal.style.backgroundColor = '#158a8e'; };
+        btnNormal.onmouseout = () => { btnNormal.style.backgroundColor = '#1da1a6'; };
+        btnNormal.onclick = () => fillForm('normal');
 
-        btn.onmouseover = () => { btn.style.backgroundColor = '#158a8e'; };
-        btn.onmouseout = () => { btn.style.backgroundColor = '#1da1a6'; };
-        btn.onclick = fillForm;
+        const btnDoa = document.createElement('button');
+        btnDoa.innerHTML = `
+            <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
+                <div style="font-weight: 800; font-size: 12px; letter-spacing: 0.05em;">BOT FILL DOA</div>
+                <div style="font-weight: 800; font-size: 10px; letter-spacing: 0.05em; opacity: 0.9;">Dead on Arrival</div>
+            </div> 
+        `;
+        btnDoa.style.cssText = `
+            background: #e65100;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+        btnDoa.onmouseover = () => { btnDoa.style.backgroundColor = '#bf360c'; };
+        btnDoa.onmouseout = () => { btnDoa.style.backgroundColor = '#e65100'; };
+        btnDoa.onclick = () => fillForm('doa');
 
         const closeBtn = document.createElement('div');
         closeBtn.innerHTML = '×';
@@ -224,7 +401,8 @@
         `;
         closeBtn.onclick = () => container.style.display = 'none';
 
-        container.appendChild(btn);
+        container.appendChild(btnNormal);
+        container.appendChild(btnDoa);
         container.appendChild(closeBtn);
         document.body.appendChild(container);
     };

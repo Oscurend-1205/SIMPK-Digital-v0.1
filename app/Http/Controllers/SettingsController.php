@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ActivityLog;
+use App\Models\IpTracker;
 
 class SettingsController extends Controller
 {
@@ -16,7 +17,10 @@ class SettingsController extends Controller
         }
 
         $logs = ActivityLog::orderBy('created_at', 'desc')->paginate(50);
-        return view('simpk.settings', compact('logs'));
+        $doctors = \App\Models\Doctor::latest()->get();
+        $ipTrackers = IpTracker::latest()->get();
+        $ipMap = $ipTrackers->whereNotNull('name')->pluck('name', 'ip_address')->toArray();
+        return view('simpk.settings', compact('logs', 'doctors', 'ipTrackers', 'ipMap'));
     }
 
     public function authenticate(Request $request)
@@ -70,5 +74,21 @@ class SettingsController extends Controller
                 'message' => 'Gagal mereset data: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function updateIpName(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'nullable|string|max:255'
+        ]);
+
+        $ipTracker = IpTracker::findOrFail($id);
+        $ipTracker->update([
+            'name' => $request->name
+        ]);
+
+        ActivityLog::log('Update IP', 'Mengubah nama IP ' . $ipTracker->ip_address . ' menjadi ' . ($request->name ?: '(kosong)'));
+
+        return back()->with('success', 'Nama IP berhasil disimpan.');
     }
 }

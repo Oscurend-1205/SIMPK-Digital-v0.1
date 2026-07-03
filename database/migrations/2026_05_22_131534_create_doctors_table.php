@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('doctors', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_dokter');
-            $table->string('nomor_sip')->unique();
-            $table->string('spesialisasi')->nullable();
+            $table->string('nama_dokter', 500);
+            $table->string('nomor_sip', 500)->unique();
+            $table->string('spesialisasi', 500)->nullable();
             $table->timestamps();
         });
     }

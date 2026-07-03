@@ -11,644 +11,669 @@
     theme: {
       extend: {
         borderRadius: {
-          'none': '0', 'sm': '0.0625rem', DEFAULT: '0.125rem',
-          'md': '0.125rem', 'lg': '0.25rem', 'xl': '0.375rem',
+          'none': '0', 'sm': '0.25rem', DEFAULT: '0.375rem',
+          'md': '0.375rem', 'lg': '0.375rem', 'xl': '0.375rem',
           '2xl': '0.5rem', '3xl': '0.75rem', 'full': '9999px',
         }
       }
     }
   }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet"/>
 <script src="https://unpkg.com/@phosphor-icons/web"></script>
 <style>
-  body { font-family: 'Inter', sans-serif; }
-  .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-  .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-  .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+  :root {
+    --brand: #0f6e72;
+    --brand-md: #1da1a6;
+    --brand-lt: #e8f7f7;
+    --ink: #0c1924;
+    --ink-mid: #3d5166;
+    --ink-lt: #7a8fa0;
+    --rule: #c8d6df;
+    --bg-app: #eef2f5;
+    --bg-cell: #f4f8fa;
+    --white: #ffffff;
+    --danger: #b91c1c;
+    --radius: 6px;
+  }
+  body { font-family: 'IBM Plex Sans', sans-serif; background: var(--bg-app); color: var(--ink); font-size: 12px; zoom: 1.1; }
+  html::-webkit-scrollbar, body::-webkit-scrollbar, .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+  html::-webkit-scrollbar-track, body::-webkit-scrollbar-track, .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb, .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+  .form-shell { max-width: 1080px; width: 100%; margin: 0 auto; }
   .form-input {
     width: 100%;
-    border: 1px solid #d1d5db;
-    border-radius: 0.25rem;
-    font-size: 0.8125rem;
-    padding: 0.3rem 0.5rem;
-    background: #fff;
-    color: #1e293b;
+    border: 1px solid var(--rule) !important;
+    border-radius: var(--radius) !important;
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+    padding: 3px 8px !important;
+    height: 26px !important;
+    background: var(--white) !important;
+    color: var(--ink) !important;
+    font-family: inherit !important;
+    transition: border-color .15s, box-shadow .15s;
   }
-  .form-input:focus { outline: 2px solid #1da1a6; outline-offset: 1px; }
-  .form-input[readonly], .form-input:disabled { background: #f8fafc; color: #64748b; cursor: not-allowed; }
+  textarea.form-input { height: auto !important; min-height: 50px; }
+  .form-input:focus { outline: none !important; border-color: var(--brand-md) !important; box-shadow: 0 0 0 2px rgba(29,161,166,.12) !important; }
+  .form-input[readonly], .form-input:disabled { background: var(--bg-cell) !important; color: var(--ink-lt) !important; cursor: not-allowed !important; }
+  .form-input.err { border-color: var(--danger) !important; }
+
+  .section-card { background: var(--white); border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
   .section-header {
-    background: #1da1a6;
+    display: flex; align-items: center; gap: 7px;
+    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-md) 100%);
     color: white;
-    padding: 0.4rem 0.75rem;
+    padding: 6px 12px;
     font-weight: 700;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
+    font-size: 10px;
+    letter-spacing: .06em;
     text-transform: uppercase;
-    border-radius: 0.375rem 0.375rem 0 0;
   }
-  .section-body {
-    border: 1px solid #e2e8f0;
-    border-top: none;
-    padding: 1rem;
-    border-radius: 0 0 0.375rem 0.375rem;
-    background: #fff;
+  .section-header .sec-letter {
+    width: 18px; height: 18px; border-radius: 4px;
+    background: rgba(255,255,255,.18);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 800; flex-shrink: 0;
   }
-  .sub-header {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #1e3a5f;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid #e2e8f0;
-    margin-bottom: 0.75rem;
-  }
+  .section-body { padding: 8px 12px; }
+  .section-hint { font-size: 10px; color: var(--ink-lt); margin-bottom: 6px; line-height: 1.45; }
+
   .field-label {
     display: block;
-    font-size: 0.7rem;
+    font-size: 9px;
     font-weight: 700;
-    color: #374151;
-    margin-bottom: 0.2rem;
+    color: var(--ink-mid);
+    margin-bottom: 3px;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: .06em;
   }
+  .field-label .req { color: var(--danger); }
+
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 6px 10px; }
+  .form-grid-2 { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+  .form-grid-4 { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+  .span-2 { grid-column: span 2; }
+  .span-3 { grid-column: span 3; }
+  .span-full { grid-column: 1 / -1; }
+
   .checkbox-label, .radio-label {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    font-size: 0.8125rem;
-    color: #374151;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--ink);
     cursor: pointer;
+    white-space: nowrap;
   }
+  .checkbox-label input, .radio-label input { width: 13px; height: 13px; accent-color: var(--brand); flex-shrink: 0; }
+  .choice-row { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; min-height: 28px; }
+  .choice-col { display: flex; flex-direction: column; gap: 6px; }
+
+  .input-group { display: flex; align-items: stretch; }
+  .input-group .form-input { border-radius: var(--radius) 0 0 var(--radius); }
+  .input-group .input-addon {
+    display: flex; align-items: center; padding: 0 8px;
+    background: var(--bg-cell); border: 1px solid var(--rule); border-left: none;
+    border-radius: 0 var(--radius) var(--radius) 0; font-size: 10px; color: var(--ink-lt); white-space: nowrap;
+  }
+  .datetime-row { display: flex; align-items: center; gap: 6px; }
+  .datetime-row .form-input { flex: 1; min-width: 0; }
+  .datetime-sep { font-size: 10px; color: var(--ink-lt); flex-shrink: 0; }
+
   .inner-box {
-    border: 1px solid #e2e8f0;
-    border-radius: 0.375rem;
-    padding: 0.75rem;
-    background: #f8fafc;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    background: var(--bg-cell);
   }
-  .penyebab-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.4rem;
+
+  .cause-table { width: 100%; min-width: 420px; border-collapse: collapse; font-size: 11px; }
+  .cause-table th {
+    text-align: left; font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .05em; color: var(--ink-mid); padding: 6px 8px;
+    background: var(--bg-cell); border: 1px solid var(--rule);
   }
-  .penyebab-label {
-    font-size: 0.8125rem;
-    font-weight: 700;
-    color: #374151;
-    min-width: 1.2rem;
-    flex-shrink: 0;
+  .cause-table td { padding: 5px 8px; border: 1px solid var(--rule); vertical-align: middle; }
+  .cause-table .group-row td {
+    background: var(--brand-lt); font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .05em; color: var(--brand); padding: 4px 8px;
   }
-  .penyebab-input {
-    flex: 1;
-    min-width: 0;
-    border: 1px solid #d1d5db;
-    border-radius: 0.25rem;
-    font-size: 0.8125rem;
-    padding: 0.3rem 0.5rem;
+  .cause-table .row-label { font-weight: 600; color: var(--ink-mid); white-space: nowrap; width: 1%; padding-right: 4px; }
+  .cause-table .interval-col { width: 130px; }
+  .cause-table input.form-input { padding: 2px 6px !important; font-size: 10.5px !important; height: 24px !important; border-radius: var(--radius) !important; }
+
+  .icd-block { display: flex; flex-wrap: wrap; gap: 12px 20px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--rule); }
+  .icd-field { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 210px; }
+  .icd-field label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-mid); white-space: nowrap; }
+  .icd-field input {
+    flex: 1; max-width: 120px; font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing: .12em; text-align: center; text-transform: uppercase;
   }
-  .table-header {
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: #1e3a5f;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #cbd5e1;
-    margin-bottom: 0.5rem;
+
+  .verify-grid { display: grid; grid-template-columns: 1fr 200px; gap: 12px; align-items: end; }
+  .sig-box {
+    border: 1px dashed var(--rule); border-radius: var(--radius); background: var(--white);
+    min-height: 88px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; padding: 10px; text-align: center; cursor: pointer; transition: background .15s;
   }
-  .divider-line {
-    border: none;
-    border-top: 2px solid #1da1a6;
-    margin: 0.75rem 0;
-    opacity: 0.3;
+  .sig-box:hover { background: var(--bg-cell); }
+  .sig-box i { font-size: 20px; color: var(--ink-lt); }
+  .sig-box span { font-size: 9px; color: var(--ink-lt); line-height: 1.4; max-width: 160px; }
+
+  .page-pad { padding-left: clamp(0.625rem, 2.5vw, 1.75rem); padding-right: clamp(0.625rem, 2.5vw, 1.75rem); }
+
+  .top-bar, .meta-bar, .action-bar-wrap {
+    background: var(--white); border: 1px solid var(--rule); border-radius: var(--radius);
+  }
+  .page-title { font-size: 14px; font-weight: 800; color: var(--ink); line-height: 1.3; }
+  .page-sub { font-size: 10px; color: var(--ink-lt); margin-top: 2px; }
+
+  @media (max-width: 640px) {
+    .form-grid, .form-grid-2, .form-grid-4 { grid-template-columns: 1fr; }
+    .span-2, .span-3, .span-full { grid-column: auto; }
+    .verify-grid { grid-template-columns: 1fr; }
+    .cause-table .interval-col { width: 90px; }
+  }
+  @media (min-width: 641px) and (max-width: 900px) {
+    .form-grid, .form-grid-2, .form-grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .span-3 { grid-column: span 2; }
   }
 </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="min-h-screen">
 @include('partials.watermark')
 
-<main id="main-container" data-draft-id="{{ $certificate->id ?? '' }}" data-certificate="{{ json_encode($certificate ?? null) }}" class="h-screen overflow-y-auto custom-scrollbar p-8 relative">
+<main id="main-container" data-draft-id="{{ $certificate->id ?? '' }}" data-certificate="{{ json_encode($certificate ?? null) }}" class="min-h-screen page-pad py-5 relative">
 
-  <!-- Navigation Top -->
-  <div class="mb-4 flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-slate-200">
-    <button type="button" onclick="handleBack()" class="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 rounded transition-all group border border-slate-200 shadow-sm">
-      <i class="ph ph-arrow-left transition-transform group-hover:-translate-x-1"></i>
-      Kembali ke Pemilihan Sertifikat
-    </button>
-    <div class="flex items-center gap-4">
+  <div class="form-shell space-y-2.5">
+
+    <!-- Top Navigation -->
+    <div class="top-bar flex justify-between items-center px-3 py-2">
+      <button type="button" onclick="handleBack()" class="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-bold text-slate-600 hover:bg-slate-50 rounded transition-all group border border-slate-200">
+        <i class="ph ph-arrow-left text-sm transition-transform group-hover:-translate-x-0.5"></i>
+        Kembali
+      </button>
       <div id="form-status-indicator" class="flex items-center gap-2">
-        <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Status:</span>
-        <div id="status-badge" class="flex items-center gap-2 bg-amber-50 text-amber-700 px-3 py-1 rounded border border-amber-200">
+        <span class="text-[9px] font-bold uppercase tracking-wider text-gray-400">Status</span>
+        <div id="status-badge" class="flex items-center gap-1.5 bg-amber-50 text-amber-700 px-2 py-0.5 rounded border border-amber-200">
           <div class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></div>
-          <span id="status-text" class="text-[10px] font-bold uppercase tracking-tight">Menulis Draft...</span>
+          <span id="status-text" class="text-[9px] font-bold uppercase">Menulis Draft...</span>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Page Header -->
-  <div class="mb-5 flex justify-between items-start">
-    <div>
-      <span class="text-xs font-bold text-gray-500 tracking-wider uppercase">Formulir Elektronik</span>
-      <h2 class="text-2xl font-bold text-blue-900 mt-1 uppercase">Sertifikat Medis Penyebab Kematian Bayi & Perinatal</h2>
-      <p class="text-sm text-gray-500 italic mt-0.5">RS Wava Husada — Standar Pelaporan Penyebab Kematian (Infants & Perinatal)</p>
+    <!-- Page Header -->
+    <div class="flex flex-wrap justify-between items-start gap-3">
+      <div>
+        <span class="text-[9px] font-bold text-gray-400 tracking-wider uppercase">Formulir Elektronik</span>
+        <h2 class="page-title mt-0.5">Sertifikat Medis Penyebab Kematian Bayi &amp; Perinatal</h2>
+        <p class="page-sub">RS Wava Husada — Standar Pelaporan Penyebab Kematian (Infants &amp; Perinatal)</p>
+      </div>
     </div>
-  </div>
 
-  <!-- Sub-header bar -->
-  <div class="mb-5 flex justify-between items-center bg-blue-50/50 p-3 rounded-lg border border-blue-100">
-    <div class="flex items-center text-blue-800 text-xs font-medium">
-      <i class="ph-bold ph-info mr-2"></i>
-      <span>Formulir Sertifikat Medis Penyebab Kematian Bayi/Neonatal (SKB)</span>
+    <!-- Meta bar -->
+    <div class="meta-bar flex flex-wrap justify-between items-center gap-2 px-3 py-2">
+      <div class="flex items-center text-[10px] text-teal-800 font-medium">
+        <i class="ph-bold ph-info mr-1.5 text-sm"></i>
+        Formulir SKB — Sertifikat Medis Penyebab Kematian Bayi/Neonatal
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-[10px] font-semibold text-slate-600">No. Sertifikat</span>
+        <input class="form-input w-36 text-center" id="no_sertifikat" type="text" value="SKB-2024/00001"/>
+        <input type="hidden" id="nama_pembuat"/>
+        <input type="hidden" id="jabatan"/>
+        <input type="hidden" id="unit"/>
+        <input type="hidden" id="dpjp"/>
+      </div>
     </div>
-    <div class="flex items-center space-x-2">
-      <span class="text-sm font-semibold">No. Sertifikat :</span>
-      <input class="bg-white border border-gray-300 rounded text-sm px-3 py-1 w-48 text-gray-700 text-center" id="no_sertifikat" type="text" value="SKB-2024/00001"/>
-    </div>
-  </div>
 
-  <!-- ===== FORM CONTAINER ===== -->
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-5">
+    <!-- ===== FORM SECTIONS ===== -->
+    <div class="space-y-3">
 
-    <!-- 1. IDENTITAS BAYI -->
-    <section>
-      <div class="section-header">1. Identitas Bayi</div>
-      <div class="section-body space-y-4">
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-          <div>
-            <label class="field-label">No. Rekam Medis Bayi</label>
-            <input id="nrm_bayi" class="form-input" type="text" placeholder="Ketik atau pilih"/>
-          </div>
-          <div>
-            <label class="field-label">Nama Bayi (jika ada)</label>
-            <input id="nama_bayi" class="form-input" type="text" placeholder="Ketik nama bayi"/>
-          </div>
-          <div>
-            <label class="field-label">Jenis Kelamin</label>
-            <div class="flex items-center gap-4 mt-1.5">
-              <label class="radio-label"><input type="radio" name="gender_bayi" value="Laki-laki" checked/> Laki-laki</label>
-              <label class="radio-label"><input type="radio" name="gender_bayi" value="Perempuan"/> Perempuan</label>
-            </div>
-          </div>
-          <div>
-            <label class="field-label">Tanggal Lahir</label>
-            <input id="tanggal_lahir_bayi" class="form-input" type="date"/>
-          </div>
-          <div>
-            <label class="field-label">Jam Lahir</label>
-            <input id="jam_lahir_bayi" class="form-input" type="time" placeholder="hh:mm"/>
-          </div>
-          <div>
-            <label class="field-label">Tanggal Meninggal</label>
-            <input id="tanggal_meninggal_bayi" class="form-input" type="date"/>
-          </div>
-          <div>
-            <label class="field-label">Jam Meninggal</label>
-            <input id="jam_meninggal_bayi" class="form-input" type="time" placeholder="hh:mm"/>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- 2. UMUR SAAT MENINGGAL -->
-    <section>
-      <div class="section-header">2. Umur Saat Meninggal</div>
-      <div class="section-body">
-        <div class="inner-box">
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div>
-              <label class="field-label">a. Hari (&lt;29 hari)</label>
-              <input id="umur_hari" class="form-input" type="number" min="0" placeholder="Ketik hari"/>
+      <!-- A. IDENTITAS BAYI -->
+      <section class="section-card">
+        <div class="section-header"><span class="sec-letter">A</span> Identitas Bayi</div>
+        <div class="section-body">
+          <div class="form-grid">
+            <div class="span-2">
+              <label class="field-label">Nama Bayi</label>
+              <input id="nama_bayi" class="form-input" type="text" placeholder="Nama bayi (jika ada)"/>
             </div>
             <div>
-              <label class="field-label">b. Bulan (&gt;28 hr s/d 59 bulan)</label>
-              <input id="umur_bulan" class="form-input" type="number" min="0" placeholder="Ketik bulan"/>
+              <label class="field-label">Nomor Rekam Medis</label>
+              <input id="nrm_bayi" class="form-input" type="text" placeholder="No. RM bayi"/>
+            </div>
+            <div class="span-full">
+              <label class="field-label">Jenis Kelamin</label>
+              <div class="choice-row">
+                <label class="radio-label"><input type="radio" name="gender_bayi" value="Perempuan"/> Perempuan</label>
+                <label class="radio-label"><input type="radio" name="gender_bayi" value="Laki-laki" checked/> Laki-laki</label>
+                <label class="radio-label"><input type="radio" name="gender_bayi" value="Tidak diketahui"/> Tidak diketahui</label>
+              </div>
+            </div>
+            <div class="span-2">
+              <label class="field-label">Tanggal dan Jam Lahir</label>
+              <div class="datetime-row">
+                <input id="tanggal_lahir_bayi" class="form-input" type="date"/>
+                <span class="datetime-sep">|</span>
+                <input id="jam_lahir_bayi" class="form-input" type="time" style="max-width:110px"/>
+              </div>
             </div>
             <div>
-              <label class="field-label">c. Tahun (≥ 5 tahun)</label>
-              <input id="umur_tahun" class="form-input" type="number" min="0" placeholder="Ketik tahun"/>
+              <label class="field-label">Berat Lahir</label>
+              <div class="input-group">
+                <input id="berat_badan_lahir" class="form-input" type="number" min="0" placeholder="0"/>
+                <span class="input-addon">gram</span>
+              </div>
             </div>
             <div>
-              <label class="field-label">d. Lahir Mati</label>
-              <div class="flex items-center gap-3 mt-1.5">
-                <label class="radio-label"><input type="radio" name="lahir_mati" value="Ya" checked/> Ya</label>
-                <label class="radio-label"><input type="radio" name="lahir_mati" value="Tidak"/> Tidak</label>
+              <label class="field-label">Usia Kehamilan</label>
+              <div class="input-group">
+                <input id="usia_kehamilan" class="form-input" type="number" min="0" placeholder="0"/>
+                <span class="input-addon">minggu</span>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 3. IDENTITAS IBU -->
-    <section>
-      <div class="section-header">3. Identitas Ibu</div>
-      <div class="section-body space-y-3">
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-          <div>
-            <label class="field-label">Nama Ibu</label>
-            <input id="nama_ibu" class="form-input" type="text" placeholder="Ketik nama ibu"/>
-          </div>
-          <div>
-            <label class="field-label">NIK Ibu</label>
-            <input id="nik_ibu" class="form-input" type="text" placeholder="Ketik NIK"/>
-          </div>
-          <div>
-            <label class="field-label">Umur Ibu</label>
-            <input id="umur_ibu" class="form-input" type="number" min="0" placeholder="Ketik umur"/>
-          </div>
-          <div>
-            <label class="field-label">Agama Ibu</label>
-            <select id="agama_ibu" class="form-input">
-              <option value="">Pilih agama</option>
-              <option>Islam</option><option>Kristen</option><option>Katolik</option>
-              <option>Hindu</option><option>Budha</option><option>Konghucu</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">No. Rekam Medis Ibu</label>
-            <input id="nrm_ibu" class="form-input" type="text" placeholder="Ketik atau pilih"/>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-          <div class="md:col-span-2">
-            <label class="field-label">Alamat Ibu</label>
-            <input id="alamat_ibu" class="form-input" type="text" placeholder="Ketik alamat ibu"/>
-          </div>
-          <div>
-            <label class="field-label">Gravida (G)</label>
-            <input id="gravida" class="form-input" type="text" placeholder="Ketik"/>
-          </div>
-          <div>
-            <label class="field-label">Para (P)</label>
-            <input id="para" class="form-input" type="text" placeholder="Ketik"/>
-          </div>
-          <div>
-            <label class="field-label">Usia Kehamilan (minggu)</label>
-            <input id="usia_kehamilan" class="form-input" type="number" min="0" placeholder="Ketik (minggu)"/>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- 4. INFORMASI PERSALINAN -->
-    <section>
-      <div class="section-header">4. Informasi Persalinan</div>
-      <div class="section-body space-y-3">
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-          <div>
-            <label class="field-label">Jenis Persalinan</label>
-            <select id="jenis_persalinan" class="form-input">
-              <option value="">Pilih jenis</option>
-              <option>Spontan</option>
-              <option>Sectio Caesarea</option>
-              <option>Vacuum/Forsep</option>
-              <option>Lainnya</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">Tempat Persalinan</label>
-            <select id="tempat_persalinan" class="form-input">
-              <option value="">Pilih tempat</option>
-              <option>Rumah Sakit</option>
-              <option>Puskesmas</option>
-              <option>Rumah Bersalin</option>
-              <option>Rumah</option>
-              <option>Lainnya</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">Penolong Persalinan</label>
-            <input id="penolong_persalinan" class="form-input" type="text" placeholder="Ketik penolong"/>
-          </div>
-          <div>
-            <label class="field-label">Kehamilan Ke-</label>
-            <input id="kehamilan_ke" class="form-input" type="number" min="1" placeholder="Ketik"/>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-          <div>
-            <label class="field-label">Berat Badan Lahir (gram)</label>
-            <input id="berat_badan_lahir" class="form-input" type="number" min="0" placeholder="Ketik gram"/>
-          </div>
-          <div>
-            <label class="field-label">Panjang Badan Lahir (cm)</label>
-            <input id="panjang_badan_lahir" class="form-input" type="number" min="0" placeholder="Ketik cm"/>
-          </div>
-          <div>
-            <label class="field-label">APGAR Score (1 menit / 5 menit)</label>
-            <div class="flex items-center gap-1">
-              <input id="apgar_1" class="form-input" type="number" min="0" max="10" placeholder="1 mnt"/>
-              <span class="text-gray-400 text-sm">/</span>
-              <input id="apgar_5" class="form-input" type="number" min="0" max="10" placeholder="5 mnt"/>
-            </div>
-          </div>
-          <div>
-            <label class="field-label">Kondisi Ketuban</label>
-            <select id="kondisi_ketuban" class="form-input">
-              <option value="">Pilih kondisi</option>
-              <option>Jernih</option>
-              <option>Keruh</option>
-              <option>Hijau</option>
-              <option>Mekonium</option>
-              <option>Lainnya</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label class="field-label">Komplikasi Persalinan</label>
-          <textarea id="komplikasi_persalinan" class="form-input min-h-[56px] resize-none" placeholder="Tuliskan komplikasi persalinan jika ada"></textarea>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- 5. INFORMASI KEMATIAN BAYI -->
-    <section>
-      <div class="section-header">5. Informasi Kematian Bayi</div>
-      <div class="section-body">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-          <div>
-            <label class="field-label">Tempat Meninggal</label>
-            <select id="tempat_meninggal_bayi" class="form-input">
-              <option value="">Pilih tempat</option>
-              <option>Rumah Sakit</option>
-              <option>Puskesmas</option>
-              <option>Rumah Bersalin</option>
-              <option>Rumah</option>
-              <option>Lainnya (Termasuk DOA)</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">Lama Perawatan</label>
-            <input id="lama_perawatan_bayi" class="form-input" type="text" placeholder="Ketik jam/hari"/>
-          </div>
-          <div>
-            <label class="field-label">DOA</label>
-            <div class="flex items-center gap-3 mt-1.5">
-              <label class="radio-label"><input type="radio" name="doa_bayi" value="Ya"/> Ya</label>
-              <label class="radio-label"><input type="radio" name="doa_bayi" value="Tidak" checked/> Tidak</label>
-            </div>
-          </div>
-          <div>
-            <label class="field-label">Resusitasi Dilakukan</label>
-            <div class="flex items-center gap-3 mt-1.5">
-              <label class="radio-label"><input type="radio" name="resusitasi" value="Ya"/> Ya</label>
-              <label class="radio-label"><input type="radio" name="resusitasi" value="Tidak" checked/> Tidak</label>
-            </div>
-          </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mt-3">
-          <div class="md:col-span-4">
-            <label class="field-label">Meninggal Saat</label>
-            <div class="flex items-center gap-4 mt-1.5">
-              <label class="radio-label"><input type="radio" name="meninggal_saat" value="Sebelum Lahir"/> Sebelum Lahir (Antepartum)</label>
-              <label class="radio-label"><input type="radio" name="meninggal_saat" value="Saat Lahir"/> Saat Lahir (Intrapartum)</label>
-              <label class="radio-label"><input type="radio" name="meninggal_saat" value="Setelah Lahir"/> Setelah Lahir (Postpartum)</label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 6. DASAR DIAGNOSA -->
-    <section>
-      <div class="section-header">6. Dasar Diagnosa (Dapat Lebih dari Satu)</div>
-      <div class="section-body">
-        <div class="flex flex-wrap gap-4">
-          <label class="checkbox-label"><input type="checkbox" id="dasar_rekam_medis"/> Rekam Medis</label>
-          <label class="checkbox-label"><input type="checkbox" id="dasar_pemeriksaan_bayi"/> Pemeriksaan Bayi</label>
-          <label class="checkbox-label"><input type="checkbox" id="dasar_pemeriksaan_penunjang"/> Pemeriksaan Penunjang</label>
-          <label class="checkbox-label"><input type="checkbox" id="dasar_autopsi"/> Autopsi</label>
-          <label class="checkbox-label"><input type="checkbox" id="dasar_surat_keterangan"/> Surat Keterangan Lain</label>
-        </div>
-      </div>
-    </section>
-
-    <!-- 7. PENYEBAB KEMATIAN BAYI -->
-    <section>
-      <div class="section-header">7. Penyebab Kematian Bayi</div>
-      <div class="section-body space-y-4">
-
-        <div class="inner-box">
-          <!-- Headers -->
-          <div class="grid grid-cols-12 gap-x-4 mb-3">
-            <div class="col-span-4 table-header">A. Penyebab dari Bayi</div>
-            <div class="col-span-4 table-header">B. Penyebab dari Ibu (Maternal)</div>
-            <div class="col-span-4 table-header">C. Kode ICD</div>
-          </div>
-
-          <div class="grid grid-cols-12 gap-x-4">
-            <!-- Col A: Penyebab dari Bayi -->
-            <div class="col-span-4 space-y-2">
-              <div class="penyebab-row">
-                <span class="penyebab-label">a.</span>
-                <div class="flex-1">
-                  <label class="field-label">Penyebab Utama Bayi</label>
-                  <input id="penyebab_utama_bayi" class="penyebab-input form-input" type="text" placeholder="Ketik penyebab utama bayi"/>
+      <!-- B. INFORMASI KEMATIAN BAYI -->
+      <section class="section-card">
+        <div class="section-header"><span class="sec-letter">B</span> Informasi Kematian Bayi</div>
+        <div class="section-body">
+          <div class="form-grid">
+            <div class="span-full">
+              <label class="field-label">Tempat Meninggal</label>
+              <div class="form-grid" style="grid-template-columns: repeat(2, 1fr);">
+                <div class="choice-col">
+                  <label class="checkbox-label"><input type="checkbox" id="tempat_meninggal_rs" class="tempat-cb"/> Rumah Sakit</label>
+                  <label class="checkbox-label"><input type="checkbox" id="tempat_meninggal_rb" class="tempat-cb"/> Rumah Bersalin</label>
                 </div>
-              </div>
-              <div class="penyebab-row">
-                <span class="penyebab-label">b.</span>
-                <div class="flex-1">
-                  <label class="field-label">Penyebab Lain Bayi</label>
-                  <input id="penyebab_lain_bayi" class="penyebab-input form-input" type="text" placeholder="Ketik penyebab lain bayi"/>
+                <div class="choice-col">
+                  <label class="checkbox-label"><input type="checkbox" id="tempat_meninggal_puskesmas" class="tempat-cb"/> Puskesmas</label>
+                  <label class="checkbox-label"><input type="checkbox" id="tempat_meninggal_rumah" class="tempat-cb"/> Rumah Tinggal</label>
+                </div>
+                <div class="span-2 flex items-center gap-2 mt-1">
+                  <label class="checkbox-label whitespace-nowrap"><input type="checkbox" id="tempat_meninggal_lainnya" class="tempat-cb"/> Lainnya</label>
+                  <input id="tempat_lainnya_ket" class="form-input flex-1" type="text" placeholder="Termasuk meninggal di perjalanan"/>
                 </div>
               </div>
             </div>
-
-            <!-- Col B: Penyebab dari Ibu -->
-            <div class="col-span-4 space-y-2">
-              <div class="penyebab-row">
-                <span class="penyebab-label">c.</span>
-                <div class="flex-1">
-                  <label class="field-label">Penyebab Utama Ibu</label>
-                  <input id="penyebab_utama_ibu" class="penyebab-input form-input" type="text" placeholder="Ketik penyebab utama ibu"/>
-                </div>
-              </div>
-              <div class="penyebab-row">
-                <span class="penyebab-label">d.</span>
-                <div class="flex-1">
-                  <label class="field-label">Penyebab Lain Ibu</label>
-                  <input id="penyebab_lain_ibu" class="penyebab-input form-input" type="text" placeholder="Ketik penyebab lain ibu"/>
-                </div>
+            <div class="span-2">
+              <label class="field-label">Tanggal dan Jam Meninggal</label>
+              <div class="datetime-row">
+                <input id="tanggal_meninggal_bayi" class="form-input" type="date"/>
+                <span class="datetime-sep">|</span>
+                <input id="jam_meninggal_bayi" class="form-input" type="time" style="max-width:110px"/>
               </div>
             </div>
+            <div>
+              <label class="field-label">Lama Perawatan</label>
+              <div class="input-group">
+                <input id="lama_perawatan_bayi" class="form-input" type="text" placeholder="Contoh: 2"/>
+                <span class="input-addon">Hari/Jam</span>
+              </div>
+            </div>
+            <div>
+              <label class="field-label">DOA (Dead On Arrival)</label>
+              <div class="choice-row">
+                <label class="radio-label"><input type="radio" name="doa_bayi" value="Ya"/> Ya</label>
+                <label class="radio-label"><input type="radio" name="doa_bayi" value="Tidak" checked/> Tidak</label>
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Resusitasi Dilakukan</label>
+              <div class="choice-row">
+                <label class="radio-label"><input type="radio" name="resusitasi" value="Ya"/> Ya</label>
+                <label class="radio-label"><input type="radio" name="resusitasi" value="Tidak" checked/> Tidak</label>
+              </div>
+            </div>
+            <div class="span-full">
+              <label class="field-label">Status Kematian <span style="font-weight:500;text-transform:none;letter-spacing:0">(pilih salah satu)</span></label>
+              <div class="choice-row">
+                <label class="radio-label"><input type="radio" name="meninggal_saat" value="Sebelum Lahir"/> Sebelum Lahir (Antepartum)</label>
+                <label class="radio-label"><input type="radio" name="meninggal_saat" value="Saat Lahir"/> Saat Lahir (Intrapartum)</label>
+                <label class="radio-label"><input type="radio" name="meninggal_saat" value="Setelah Lahir"/> Setelah Lahir (Postpartum)</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            <!-- Col C: Kode ICD -->
-            <div class="col-span-4 space-y-2">
+      <!-- C. INFORMASI MATERNAL & PERINATAL -->
+      <section class="section-card">
+        <div class="section-header"><span class="sec-letter">C</span> Informasi Maternal &amp; Perinatal</div>
+        <div class="section-body">
+          <p class="section-hint mb-3 font-bold border-b border-slate-200 pb-1 text-slate-600">1. Identitas Ibu</p>
+          <div class="form-grid mb-4">
+            <div class="span-2">
+              <label class="field-label">Nama Ibu</label>
+              <input id="nama_ibu" class="form-input" type="text" placeholder="Nama lengkap ibu"/>
+            </div>
+            <div>
+              <label class="field-label">No. RM Ibu</label>
+              <input id="nrm_ibu" class="form-input" type="text" placeholder="No. RM ibu"/>
+            </div>
+            <div>
+              <label class="field-label">NIK Ibu</label>
+              <input id="nik_ibu" class="form-input" type="text" placeholder="Ketik NIK"/>
+            </div>
+            <div>
+              <label class="field-label">Agama Ibu</label>
+              <select id="agama_ibu" class="form-input">
+                <option value="">Pilih agama...</option>
+                <option value="Islam">Islam</option>
+                <option value="Kristen Protestan">Kristen Protestan</option>
+                <option value="Kristen Katolik">Kristen Katolik</option>
+                <option value="Hindu">Hindu</option>
+                <option value="Buddha">Buddha</option>
+                <option value="Konghucu">Konghucu</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">Usia Ibu</label>
+              <div class="input-group">
+                <input id="umur_ibu" class="form-input" type="number" min="0" placeholder="0"/>
+                <span class="input-addon">tahun</span>
+              </div>
+            </div>
+            <div class="span-2">
+              <label class="field-label">Alamat Ibu</label>
+              <input id="alamat_ibu" class="form-input" type="text" placeholder="Ketik alamat lengkap"/>
+            </div>
+            <div>
+              <label class="field-label">Provinsi</label>
+              <div class="relative">
+                <input id="provinsi_ibu" class="form-input" type="text" placeholder="Ketik provinsi" autocomplete="off"/>
+                <div id="dropdown-provinsi_ibu" class="absolute z-50 w-full bg-white border border-slate-200 shadow-lg rounded mt-1 hidden max-h-40 overflow-y-auto"></div>
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Kab/Kota</label>
+              <div class="relative">
+                <input id="kab_kota_ibu" class="form-input" type="text" placeholder="Ketik kab/kota" autocomplete="off"/>
+                <div id="dropdown-kab_kota_ibu" class="absolute z-50 w-full bg-white border border-slate-200 shadow-lg rounded mt-1 hidden max-h-40 overflow-y-auto"></div>
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Kecamatan</label>
+              <div class="relative">
+                <input id="kecamatan_ibu" class="form-input" type="text" placeholder="Ketik kecamatan" autocomplete="off"/>
+                <div id="dropdown-kecamatan_ibu" class="absolute z-50 w-full bg-white border border-slate-200 shadow-lg rounded mt-1 hidden max-h-40 overflow-y-auto"></div>
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Kelurahan</label>
+              <div class="relative">
+                <input id="kelurahan_ibu" class="form-input" type="text" placeholder="Ketik kelurahan" autocomplete="off"/>
+                <div id="dropdown-kelurahan_ibu" class="absolute z-50 w-full bg-white border border-slate-200 shadow-lg rounded mt-1 hidden max-h-40 overflow-y-auto"></div>
+              </div>
+            </div>
+          </div>
+
+          <p class="section-hint mb-3 font-bold border-b border-slate-200 pb-1 text-slate-600">2. Riwayat Kehamilan &amp; Persalinan</p>
+          <div class="form-grid mb-4">
+            <div>
+              <label class="field-label">Gravida (G)</label>
+              <input id="gravida" class="form-input" type="number" min="1" placeholder="G ke-"/>
+            </div>
+            <div>
+              <label class="field-label">Para (P)</label>
+              <input id="para" class="form-input" type="number" min="0" placeholder="P ke-"/>
+            </div>
+            <div>
+              <label class="field-label">Kehamilan Kembar</label>
+              <div class="choice-row">
+                <label class="radio-label"><input type="radio" name="kehamilan_kembar" value="Ya"/> Ya</label>
+                <label class="radio-label"><input type="radio" name="kehamilan_kembar" value="Tidak" checked/> Tidak</label>
+                <label class="radio-label"><input type="radio" name="kehamilan_kembar" value="Tidak Diketahui"/> Tidak Diketahui</label>
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Kondisi Ketuban</label>
+              <select id="kondisi_ketuban" class="form-input">
+                <option value="">Pilih kondisi...</option>
+                <option value="Jernih">Jernih</option>
+                <option value="Keruh/Mekonium">Keruh / Mekonium</option>
+                <option value="Kering">Kering</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+            <div class="span-2">
+              <label class="field-label">Komplikasi Persalinan</label>
+              <input id="komplikasi_persalinan" class="form-input" type="text" placeholder="Cth: Perdarahan, Eklampsia (kosongkan jika tak ada)"/>
+            </div>
+          </div>
+
+          <p class="section-hint mb-3 font-bold border-b border-slate-200 pb-1 text-slate-600">3. Kondisi Bayi Saat Lahir</p>
+          <div class="form-grid">
+            <div>
+              <label class="field-label">APGAR Score (1 Menit)</label>
+              <input id="apgar_1" class="form-input" type="number" min="0" max="10" placeholder="0-10"/>
+            </div>
+            <div>
+              <label class="field-label">APGAR Score (5 Menit)</label>
+              <input id="apgar_5" class="form-input" type="number" min="0" max="10" placeholder="0-10"/>
+            </div>
+            <div>
+              <label class="field-label">Lahir Mati (Stillbirth)</label>
+              <div class="choice-row">
+                <label class="radio-label"><input type="radio" name="lahir_mati" value="Ya"/> Ya</label>
+                <label class="radio-label"><input type="radio" name="lahir_mati" value="Tidak" checked/> Tidak</label>
+                <label class="radio-label"><input type="radio" name="lahir_mati" value="Tidak Diketahui"/> Tidak Diketahui</label>
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Lama Bayi Bertahan Hidup</label>
+              <div class="input-group">
+                <input id="lama_bayi_bertahan_jam" class="form-input" type="number" min="0" placeholder="0"/>
+                <span class="input-addon">jam</span>
+              </div>
+              <p class="text-[9px] text-gray-400 mt-1">Jika meninggal &lt;24 jam</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- D. FAKTOR MATERNAL -->
+      <section class="section-card">
+        <div class="section-header"><span class="sec-letter">D</span> Faktor Maternal yang Mempengaruhi Kematian Bayi</div>
+        <div class="section-body">
+          <p class="section-hint">Pilih salah satu kondisi maternal utama yang paling mempengaruhi janin/bayi baru lahir.</p>
+          <div class="inner-box choice-col">
+            <label class="radio-label"><input type="radio" name="faktor_maternal" value="M1"/> <strong>M1</strong> — Komplikasi plasenta, tali pusat, dan selaput ketuban</label>
+            <label class="radio-label"><input type="radio" name="faktor_maternal" value="M2"/> <strong>M2</strong> — Komplikasi kehamilan ibu</label>
+            <label class="radio-label"><input type="radio" name="faktor_maternal" value="M3"/> <strong>M3</strong> — Komplikasi inpartu dan persalinan</label>
+            <label class="radio-label"><input type="radio" name="faktor_maternal" value="M4"/> <strong>M4</strong> — Kondisi medis dan operasi ibu</label>
+            <label class="radio-label"><input type="radio" name="faktor_maternal" value="M5"/> <strong>M5</strong> — Tidak ada komplikasi kondisi ibu</label>
+            <div class="flex items-center gap-2 flex-wrap">
+              <label class="radio-label"><input type="radio" name="faktor_maternal" value="M6"/> <strong>M6</strong> — Kondisi/penyakit lainnya</label>
+              <input id="faktor_maternal_m6_ket" class="form-input flex-1 min-w-[140px]" type="text" placeholder="Sebutkan..."/>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- E. DASAR DIAGNOSIS -->
+      <section class="section-card">
+        <div class="section-header"><span class="sec-letter">E</span> Dasar Diagnosis</div>
+        <div class="section-body">
+          <p class="section-hint">Dapat dicentang lebih dari satu.</p>
+          <div class="choice-row">
+            <label class="checkbox-label"><input type="checkbox" id="dasar_rekam_medis"/> Rekam Medis</label>
+            <label class="checkbox-label"><input type="checkbox" id="dasar_pemeriksaan_bayi"/> Pemeriksaan Bayi</label>
+            <label class="checkbox-label"><input type="checkbox" id="dasar_pemeriksaan_penunjang"/> Pemeriksaan Penunjang</label>
+            <label class="checkbox-label"><input type="checkbox" id="dasar_autopsi"/> Autopsi</label>
+            <label class="checkbox-label"><input type="checkbox" id="dasar_surat_keterangan"/> Surat Keterangan Lain</label>
+          </div>
+        </div>
+      </section>
+
+      <!-- F. PENYEBAB KEMATIAN BAYI -->
+      <section class="section-card">
+        <div class="section-header"><span class="sec-letter">F</span> Penyebab Kematian Bayi</div>
+        <div class="section-body">
+          <div class="inner-box" style="padding:0;overflow-x:auto;background:var(--white)">
+            <table class="cause-table">
+              <thead>
+                <tr>
+                  <th>Kondisi Medis / Diagnosis</th>
+                  <th class="interval-col">Interval Waktu</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="group-row"><td colspan="2">1. Penyebab dari Bayi</td></tr>
+                <tr>
+                  <td>
+                    <div class="flex items-start gap-1.5">
+                      <span class="row-label">a.</span>
+                      <div style="flex:1;min-width:0">
+                        <div style="font-size:10px;font-weight:600;color:var(--ink-mid);margin-bottom:3px">Penyebab Utama Kematian Bayi</div>
+                        <input id="penyebab_utama_bayi" class="form-input" type="text" placeholder="Penyebab langsung"/>
+                      </div>
+                    </div>
+                  </td>
+                  <td><input id="interval_penyebab_utama_bayi" class="form-input" type="text" placeholder="cth: 2 jam"/></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="flex items-start gap-1.5">
+                      <span class="row-label">b.</span>
+                      <div style="flex:1;min-width:0">
+                        <div style="font-size:10px;font-weight:600;color:var(--ink-mid);margin-bottom:3px">Penyebab Antara</div>
+                        <input id="penyebab_antara_bayi" class="form-input" type="text" placeholder="Penyebab antara"/>
+                      </div>
+                    </div>
+                  </td>
+                  <td><input id="interval_penyebab_antara_bayi" class="form-input" type="text" placeholder="cth: 1 hari"/></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="flex items-start gap-1.5">
+                      <span class="row-label">c.</span>
+                      <div style="flex:1;min-width:0">
+                        <div style="font-size:10px;font-weight:600;color:var(--ink-mid);margin-bottom:3px">Penyebab Dasar</div>
+                        <input id="penyebab_dasar_bayi" class="form-input" type="text" placeholder="Penyebab dasar (underlying)"/>
+                      </div>
+                    </div>
+                  </td>
+                  <td><input id="interval_penyebab_dasar_bayi" class="form-input" type="text" placeholder="cth: 3 minggu"/></td>
+                </tr>
+                <tr class="group-row"><td colspan="2">2. Penyebab dari Ibu (Maternal)</td></tr>
+                <tr>
+                  <td>
+                    <div class="flex items-start gap-1.5">
+                      <span class="row-label">d.</span>
+                      <div style="flex:1;min-width:0">
+                        <div style="font-size:10px;font-weight:600;color:var(--ink-mid);margin-bottom:3px">Penyebab Utama Ibu</div>
+                        <input id="penyebab_utama_ibu" class="form-input" type="text" placeholder="Penyebab utama ibu"/>
+                      </div>
+                    </div>
+                  </td>
+                  <td><input id="interval_penyebab_utama_ibu" class="form-input" type="text" placeholder="cth: 2 bulan"/></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="flex items-start gap-1.5">
+                      <span class="row-label">e.</span>
+                      <div style="flex:1;min-width:0">
+                        <div style="font-size:10px;font-weight:600;color:var(--ink-mid);margin-bottom:3px">Penyebab Pendukung</div>
+                        <input id="penyebab_pendukung_ibu" class="form-input" type="text" placeholder="Penyebab pendukung"/>
+                      </div>
+                    </div>
+                  </td>
+                  <td><input id="interval_penyebab_pendukung_ibu" class="form-input" type="text" placeholder="cth: 1 tahun"/></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="icd-block" style="padding:10px 12px;margin-top:0;border-top:1px solid var(--rule)">
+              <div class="icd-field">
+                <label>Kode ICD Penyebab Bayi</label>
+                <input id="icd_penyebab_bayi" class="form-input" type="text" placeholder="XXX.XX" maxlength="7"/>
+              </div>
+              <div class="icd-field">
+                <label>Kode ICD Penyebab Maternal</label>
+                <input id="icd_penyebab_maternal" class="form-input" type="text" placeholder="XXX.XX" maxlength="7"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- G. VERIFIKASI DOKTER -->
+      <section class="section-card">
+        <div class="section-header"><span class="sec-letter">G</span> Verifikasi Dokter</div>
+        <div class="section-body">
+          <div class="verify-grid">
+            <div class="form-grid" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
               <div>
-                <label class="field-label">ICD Penyebab Bayi</label>
-                <input id="icd_penyebab_bayi" class="form-input text-xs" type="text" placeholder="ICD penyebab bayi"/>
+                <label class="field-label">Nama Dokter</label>
+                <input id="nama_dokter" class="form-input" type="text" placeholder="Nama lengkap dokter"/>
               </div>
               <div>
-                <label class="field-label">ICD Penyebab Maternal</label>
-                <input id="icd_penyebab_maternal" class="form-input text-xs" type="text" placeholder="ICD penyebab maternal"/>
+                <label class="field-label">SIP</label>
+                <input id="nomor_sip" class="form-input" type="text" placeholder="Nomor SIP"/>
               </div>
               <div>
-                <label class="field-label">ICD FUCoD</label>
-                <input id="icd_fucod_bayi" class="form-input text-xs" type="text" placeholder="ICD FUCoD"/>
+                <label class="field-label">Tanggal Penetapan</label>
+                <input id="tanggal_ttd" class="form-input" type="date"/>
               </div>
+            </div>
+            <div class="sig-box" title="Area tanda tangan elektronik / QR verifikasi">
+              <i class="ph ph-qr-code"></i>
+              <span>Tanda Tangan Elektronik / QR Code Verifikasi</span>
             </div>
           </div>
         </div>
+      </section>
 
-        <hr class="divider-line"/>
+    </div>
 
-        <!-- Kelaian / Kondisi Penyerta -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <p class="sub-header">Kelainan/Kondisi Penyerta pada Bayi</p>
-            <div class="flex flex-wrap gap-3">
-              <label class="checkbox-label"><input type="checkbox" id="cond_prematuritas"/> Prematuritas</label>
-              <label class="checkbox-label"><input type="checkbox" id="cond_asfiksia"/> Asfiksia</label>
-              <label class="checkbox-label"><input type="checkbox" id="cond_infeksi"/> Infeksi</label>
-              <label class="checkbox-label"><input type="checkbox" id="cond_kongenital"/> Kelainan Kongenital</label>
-              <label class="checkbox-label"><input type="checkbox" id="cond_sepsis"/> Sepsis Neonatorum</label>
-              <label class="checkbox-label"><input type="checkbox" id="cond_bblr"/> BBLR</label>
-              <div class="flex items-center gap-2">
-                <label class="checkbox-label"><input type="checkbox" id="cond_lainnya_bayi"/> Lainnya</label>
-                <input id="cond_lainnya_bayi_ket" class="form-input w-28 text-xs" type="text" placeholder="Sebutkan"/>
-              </div>
-            </div>
-          </div>
-          <div>
-            <p class="sub-header">Kondisi Maternal yang Berkaitan</p>
-            <div class="flex flex-wrap gap-3">
-              <label class="checkbox-label"><input type="checkbox" id="mat_kehamilan_komplikasi"/> Kehamilan dengan komplikasi</label>
-              <label class="checkbox-label"><input type="checkbox" id="mat_persalinan_komplikasi"/> Persalinan dengan komplikasi</label>
-              <label class="checkbox-label"><input type="checkbox" id="mat_nifas_komplikasi"/> Nifas dengan komplikasi</label>
-              <label class="checkbox-label"><input type="checkbox" id="mat_penyakit_ibu"/> Penyakit Ibu</label>
-              <div class="flex items-center gap-2">
-                <label class="checkbox-label"><input type="checkbox" id="mat_lainnya"/> Lainnya</label>
-                <input id="mat_lainnya_ket" class="form-input w-28 text-xs" type="text" placeholder="Sebutkan"/>
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- Action Footer -->
+    <div class="action-bar-wrap flex flex-wrap items-center justify-end gap-2 px-3 py-2.5" id="form-actions">
+      <button type="button" id="btn-draft" onclick="saveDraft()" class="px-4 py-1.5 border border-gray-300 bg-white text-gray-800 rounded font-bold text-[11px] hover:bg-gray-50 transition-colors">
+        Simpan Draft
+      </button>
+      <button type="button" id="btn-final" onclick="submitFinal()" class="px-4 py-1.5 bg-teal-700 text-white rounded font-bold text-[11px] hover:bg-teal-800 transition-colors">
+        Simpan Final
+      </button>
+      <button type="button" id="btn-print" onclick="goToOutput()" class="hidden px-4 py-1.5 bg-emerald-600 text-white rounded font-bold text-[11px] hover:bg-emerald-700 transition-colors">
+        <i class="ph-bold ph-printer mr-1"></i> Cetak / Preview
+      </button>
+      <a href="/certificates" id="btn-back" class="hidden px-4 py-1.5 bg-gray-100 text-gray-700 rounded font-bold text-[11px] hover:bg-gray-200 transition-colors">
+        Kembali ke Arsip
+      </a>
+    </div>
 
-      </div>
-    </section>
+    <div class="pb-4 text-center text-[10px] text-gray-400 font-medium">
+      &copy; 2026 RS Wava Husada. All rights reserved.
+    </div>
 
-    <!-- 8. PENGESAHAN -->
-    <section>
-      <div class="section-header">8. Pengesahan</div>
-      <div class="section-body">
-        <div class="inner-box space-y-4">
-
-          <!-- Dokter & Unit -->
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-              <label class="field-label">Nama Dokter yang Menerangkan</label>
-              <input id="nama_dokter" class="form-input" type="text" placeholder="Ketik nama dokter"/>
-            </div>
-            <div>
-              <label class="field-label">SIP Dokter</label>
-              <input id="nomor_sip" class="form-input" type="text" placeholder="Ketik no. SIP"/>
-            </div>
-            <div>
-              <label class="field-label">Unit/Instalasi</label>
-              <input id="unit_instalasi" class="form-input" type="text" placeholder="Ketik unit"/>
-            </div>
-            <div>
-              <label class="field-label">Tanggal Pengisian</label>
-              <input id="tanggal_ttd" class="form-input" type="date"/>
-            </div>
-          </div>
-
-          <!-- Tanda Tangan -->
-          <div class="border-t border-gray-200 pt-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <!-- Dokter TTD -->
-              <div class="flex flex-col">
-                <p class="text-xs font-bold text-gray-700 mb-2">Tanda Tangan Dokter</p>
-                <div class="w-full h-20 border border-dashed border-gray-300 rounded bg-white flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
-                  <span class="text-xs text-gray-400 flex items-center gap-1"><i class="ph ph-pencil-simple"></i>Klik untuk tanda tangan</span>
-                </div>
-              </div>
-              <!-- Penerima -->
-              <div class="flex flex-col">
-                <p class="text-xs font-bold text-gray-700 mb-2">Pihak Penerima</p>
-                <div class="space-y-2">
-                  <div>
-                    <label class="field-label">Nama Terang</label>
-                    <input id="nama_terang_penerima" class="form-input" type="text" placeholder="Nama Terang..."/>
-                  </div>
-                  <div>
-                    <label class="field-label">Hubungan dengan Bayi</label>
-                    <select id="hubungan_bayi" class="form-input">
-                      <option value="">Pilih hubungan</option>
-                      <option>Orang Tua (Ayah)</option>
-                      <option>Orang Tua (Ibu)</option>
-                      <option>Wali</option>
-                      <option>Lainnya</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <!-- Penerima TTD -->
-              <div class="flex flex-col">
-                <p class="text-xs font-bold text-gray-700 mb-2">Tanda Tangan Penerima</p>
-                <div class="w-full h-20 border border-dashed border-gray-300 rounded bg-white flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
-                  <span class="text-xs text-gray-400 flex items-center gap-1"><i class="ph ph-pencil-simple"></i>Klik untuk tanda tangan</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-  </div>
-
-  <!-- Action Footer -->
-  <div class="mt-6 flex flex-wrap items-center justify-end gap-3" id="form-actions">
-    <button type="button" id="btn-draft" onclick="saveDraft()" class="px-6 py-2 border border-gray-300 bg-white text-gray-800 rounded font-bold text-sm hover:bg-gray-50 transition-colors">
-      Simpan Draft
-    </button>
-    <button type="button" id="btn-final" onclick="submitFinal()" class="px-6 py-2 bg-blue-600 text-white rounded font-bold text-sm hover:bg-blue-700 transition-colors">
-      Simpan Final
-    </button>
-    <button type="button" id="btn-print" onclick="goToOutput()" class="hidden px-6 py-2 bg-emerald-600 text-white rounded font-bold text-sm hover:bg-emerald-700 transition-colors">
-      <i class="ph-bold ph-printer mr-1"></i> Cetak / Preview
-    </button>
-    <a href="/certificates" id="btn-back" class="hidden px-6 py-2 bg-gray-100 text-gray-700 rounded font-bold text-sm hover:bg-gray-200 transition-colors">
-      Kembali ke Arsip
-    </a>
   </div>
 
   <!-- Toast Container -->
-  <div id="toast-container" class="fixed bottom-8 right-8 z-[110] flex flex-col gap-3"></div>
+  <div id="toast-container" class="fixed bottom-6 right-6 z-[110] flex flex-col gap-2"></div>
 
-  <!-- BEGIN: Modern Confirmation Modal -->
+  <!-- Confirmation Modal -->
   <div id="confirmation-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 text-left">
       <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md transition-opacity duration-300 opacity-0" id="modal-backdrop"></div>
-      <div class="relative bg-white/90 backdrop-blur-xl border border-white/20 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
-          <div class="p-8 text-center">
-              <div id="modal-icon-container" class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <i id="modal-icon" class="ph-bold ph-warning-circle text-3xl"></i>
+      <div class="relative bg-white/95 backdrop-blur-xl border border-slate-200 w-full max-w-sm rounded-xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
+          <div class="p-6 text-center">
+              <div id="modal-icon-container" class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i id="modal-icon" class="ph-bold ph-warning-circle text-2xl"></i>
               </div>
-              <h3 id="modal-title" class="text-xl font-bold text-slate-900 mb-2">Perubahan belum disimpan</h3>
-              <p id="modal-description" class="text-slate-600 mb-8"></p>
-              <div id="modal-actions" class="flex flex-col gap-3">
-              </div>
+              <h3 id="modal-title" class="text-base font-bold text-slate-900 mb-1.5">Perubahan belum disimpan</h3>
+              <p id="modal-description" class="text-[11px] text-slate-600 mb-5 leading-relaxed"></p>
+              <div id="modal-actions" class="flex flex-col gap-2"></div>
           </div>
       </div>
   </div>
-
-  <div class="mt-8 pb-8 text-center text-xs text-gray-500 font-medium">
-    © 2026 RS Wava Husada. All rights reserved.
-  </div>
 </main>
+
+<script src="{{ asset('js/wilayah-autocomplete.js') }}"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -766,11 +791,6 @@ document.addEventListener('DOMContentLoaded', function() {
     restoreFromLocalStorage();
   }
 
-  window.goToOutput = function() {
-    if (draftId) {
-      window.location.href = `/output/bayi/${draftId}`;
-    }
-  };
   // --- End Local Storage / Database Load Logic ---
 
   formInputs.forEach(input => {
@@ -792,62 +812,35 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // --- Automatic Meninggal Saat & Lahir Mati Synchronizer ---
-  const umurHariInput = document.getElementById('umur_hari');
-  const umurBulanInput = document.getElementById('umur_bulan');
-  const umurTahunInput = document.getElementById('umur_tahun');
+  // --- Automatic Lahir Mati & Status Kematian Synchronizer ---
   const lahirMatiRadios = document.querySelectorAll('input[name="lahir_mati"]');
   const meninggalSaatRadios = document.querySelectorAll('input[name="meninggal_saat"]');
 
-  function syncUmurAndMeninggalSaat() {
+  function syncLahirMatiAndStatusKematian() {
     if (isFinalSubmitted) return;
-
-    let hasAge = false;
-    if (umurHariInput && umurHariInput.value !== '' && parseFloat(umurHariInput.value) >= 0) hasAge = true;
-    if (umurBulanInput && umurBulanInput.value !== '' && parseFloat(umurBulanInput.value) >= 0) hasAge = true;
-    if (umurTahunInput && umurTahunInput.value !== '' && parseFloat(umurTahunInput.value) >= 0) hasAge = true;
 
     const selectedLahirMati = document.querySelector('input[name="lahir_mati"]:checked')?.value;
 
-    if (hasAge) {
-      // Auto check Lahir Mati = "Tidak"
-      const tidakRadio = document.querySelector('input[name="lahir_mati"][value="Tidak"]');
-      if (tidakRadio && !tidakRadio.checked) {
-        tidakRadio.checked = true;
-        tidakRadio.dispatchEvent(new Event('change'));
-      }
-      // Auto check Meninggal Saat = "Setelah Lahir"
-      const setelahLahirRadio = document.querySelector('input[name="meninggal_saat"][value="Setelah Lahir"]');
-      if (setelahLahirRadio && !setelahLahirRadio.checked) {
-        setelahLahirRadio.checked = true;
-        setelahLahirRadio.dispatchEvent(new Event('change'));
-      }
-    } else if (selectedLahirMati === 'Ya') {
-      // Auto select "Sebelum Lahir" as default stillbirth type if neither is checked
+    if (selectedLahirMati === 'Ya') {
+      // Lahir mati -> default ke Antepartum jika Status Kematian belum diisi
       const antepartumRadio = document.querySelector('input[name="meninggal_saat"][value="Sebelum Lahir"]');
       const intrapartumRadio = document.querySelector('input[name="meninggal_saat"][value="Saat Lahir"]');
       if (antepartumRadio && !antepartumRadio.checked && (!intrapartumRadio || !intrapartumRadio.checked)) {
         antepartumRadio.checked = true;
         antepartumRadio.dispatchEvent(new Event('change'));
       }
-      // Clear live age inputs if stillbirth
-      if (umurHariInput && umurHariInput.value !== '') { umurHariInput.value = ''; umurHariInput.dispatchEvent(new Event('input')); }
-      if (umurBulanInput && umurBulanInput.value !== '') { umurBulanInput.value = ''; umurBulanInput.dispatchEvent(new Event('input')); }
-      if (umurTahunInput && umurTahunInput.value !== '') { umurTahunInput.value = ''; umurTahunInput.dispatchEvent(new Event('input')); }
     } else if (selectedLahirMati === 'Tidak') {
-      // Auto check Meninggal Saat = "Setelah Lahir"
+      // Lahir hidup -> Status Kematian otomatis Setelah Lahir
       const setelahLahirRadio = document.querySelector('input[name="meninggal_saat"][value="Setelah Lahir"]');
       if (setelahLahirRadio && !setelahLahirRadio.checked) {
         setelahLahirRadio.checked = true;
         setelahLahirRadio.dispatchEvent(new Event('change'));
       }
     }
+    // "Tidak Diketahui" sengaja tidak memaksa pilihan Status Kematian
   }
 
-  if (umurHariInput) umurHariInput.addEventListener('input', syncUmurAndMeninggalSaat);
-  if (umurBulanInput) umurBulanInput.addEventListener('input', syncUmurAndMeninggalSaat);
-  if (umurTahunInput) umurTahunInput.addEventListener('input', syncUmurAndMeninggalSaat);
-  lahirMatiRadios.forEach(radio => radio.addEventListener('change', syncUmurAndMeninggalSaat));
+  lahirMatiRadios.forEach(radio => radio.addEventListener('change', syncLahirMatiAndStatusKematian));
   meninggalSaatRadios.forEach(radio => radio.addEventListener('change', function() {
     if (isFinalSubmitted) return;
     if (this.checked && this.value === 'Setelah Lahir') {
@@ -968,17 +961,17 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   window.submitFinal = function() {
-    // Validasi: minimal poin Identitas Jenazah (Identitas Bayi) harus terisi
-    const identitasFields = ['nrm_bayi', 'nama_bayi', 'tanggal_lahir_bayi', 'tanggal_meninggal_bayi'];
-    const emptyIdentitas = identitasFields.filter(id => {
+    // Validasi: minimal data Identitas Bayi (A) dan Informasi Kematian Bayi (B) harus terisi
+    const wajibFields = ['nrm_bayi', 'nama_bayi', 'tanggal_lahir_bayi', 'tanggal_meninggal_bayi'];
+    const emptyWajib = wajibFields.filter(id => {
       const el = document.getElementById(id);
       return !el || el.value.trim() === '';
     });
 
-    if (emptyIdentitas.length > 0) {
-       showToast('Mohon lengkapi minimal poin "Identitas Jenazah" (Identitas Bayi) sebelum melakukan pengajuan final.', 'error');
+    if (emptyWajib.length > 0) {
+       showToast('Mohon lengkapi data wajib pada bagian Identitas Bayi dan Informasi Kematian Bayi sebelum melakukan pengajuan final.', 'error');
        // Scroll & focus ke field kosong pertama
-       const firstEmpty = document.getElementById(emptyIdentitas[0]);
+       const firstEmpty = document.getElementById(emptyWajib[0]);
        if (firstEmpty) { firstEmpty.scrollIntoView({ behavior: 'smooth', block: 'center' }); firstEmpty.focus(); }
        return;
     }
@@ -1164,6 +1157,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   // --- End Navigation Interceptor ---
+
+  window.goToOutput = function() {
+    if (draftId) {
+      window.location.href = `/output/bayi/${draftId}`;
+    } else {
+      showToast('Sertifikat belum tersimpan', 'error');
+    }
+  };
 
   window.addEventListener('beforeunload', (e) => {
     if (isFormDirty && !isFinalSubmitted) { e.preventDefault(); e.returnValue = ''; }

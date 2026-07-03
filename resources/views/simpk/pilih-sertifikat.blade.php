@@ -75,6 +75,7 @@
     input[type="text"]:focus,
     select:focus { outline: none; border-color: var(--brand-md); box-shadow: 0 0 0 2px rgba(29,161,166,.1); }
     input.err { border-color: var(--danger); }
+    input[readonly] { background: var(--bg-cell); color: var(--ink-mid); cursor: not-allowed; border-color: var(--rule); }
     .select-wrap { position: relative; }
     .select-wrap select { padding-right: 28px; }
     .select-arrow { position: absolute; right: 9px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--ink-lt); font-size: 14px; }
@@ -174,6 +175,24 @@
         transition: all .25s;
     }
     .toast.show { transform: translateY(0); opacity: 1; }
+    
+    /* ── AUTOCOMPLETE ───────────────────────── */
+    .autocomplete-wrap { position: relative; }
+    .autocomplete-dropdown {
+        position: absolute; top: 100%; left: 0; right: 0;
+        background: var(--white); border: 1px solid var(--brand-md);
+        border-radius: 4px; margin-top: 4px;
+        box-shadow: 0 4px 12px rgba(0,0,0,.1); z-index: 50;
+        max-height: 200px; overflow-y: auto; display: none;
+    }
+    .autocomplete-dropdown.show { display: block; }
+    .autocomplete-item {
+        padding: 8px 12px; cursor: pointer; border-bottom: 1px solid var(--bg-cell);
+    }
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:hover { background: var(--brand-lt); }
+    .autocomplete-item strong { color: var(--ink); font-size: 12px; display: block; }
+    .autocomplete-item small { color: var(--ink-lt); font-size: 10px; font-family: 'IBM Plex Mono', monospace; }
 </style>
 </head>
 <body>
@@ -199,21 +218,23 @@
                 </div>
 
                 <div class="form-grid">
-                    <div class="form-group">
+                    <div class="form-group autocomplete-wrap">
                         <label>Nama Pembuat Surat <span class="req">*</span></label>
-                        <input type="text" name="nama_pembuat" required placeholder="Nama lengkap beserta gelar">
+                        <input type="text" name="nama_pembuat" id="nama_pembuat" required placeholder="Nama lengkap beserta gelar" autocomplete="off">
+                        <div id="dropdown_pembuat" class="autocomplete-dropdown"></div>
                     </div>
                     <div class="form-group">
                         <label>Jabatan <span class="req">*</span></label>
-                        <input type="text" name="jabatan" required placeholder="Contoh: Dokter Umum / Spesialis">
+                        <input type="text" name="jabatan" id="jabatan" required placeholder="Isi manual atau otomatis dari spesialisasi">
                     </div>
                     <div class="form-group">
                         <label>Unit / Ruangan <span class="req">*</span></label>
                         <input type="text" name="unit" required placeholder="Contoh: IGD / ICU / Bangsal">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group autocomplete-wrap">
                         <label>Dokter Penanggung Jawab (DPJP) <span class="req">*</span></label>
-                        <input type="text" name="dpjp" required placeholder="Nama DPJP">
+                        <input type="text" name="dpjp" id="dpjp" required placeholder="Nama DPJP" autocomplete="off">
+                        <div id="dropdown_dpjp" class="autocomplete-dropdown"></div>
                     </div>
                     <div class="form-group full">
                         <label>Nomor Surat <span class="req">*</span></label>
@@ -335,6 +356,21 @@
 
     function proceed() {
         isFormDirty = false;
+        
+        const formObj = {
+            nama_pembuat: document.querySelector('[name="nama_pembuat"]').value,
+            jabatan: document.querySelector('[name="jabatan"]').value,
+            unit: document.querySelector('[name="unit"]').value,
+            dpjp: document.querySelector('[name="dpjp"]').value,
+            no_sertifikat: document.querySelector('[name="no_surat"]').value
+        };
+
+        const storageKey = selectedType === 'dewasa' ? 'draft_kematian_dewasa' : 'draft_kematian_bayi';
+        let existingDraft = {};
+        try { existingDraft = JSON.parse(sessionStorage.getItem(storageKey) || '{}'); } catch(e){}
+        
+        sessionStorage.setItem(storageKey, JSON.stringify({ ...existingDraft, ...formObj }));
+
         closeModal();
         window.location.href = selectedType === 'dewasa' ? '/form/kematian-dewasa' : '/form/kematian-bayi';
     }
@@ -362,15 +398,102 @@
         setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 3000);
     }
 
-    // Dirty check on leave
+    // Dirty check on leave (Native for tab close/refresh)
     window.addEventListener('beforeunload', e => {
         if (isFormDirty) { e.preventDefault(); e.returnValue = ''; }
+    });
+
+    // Custom Modal for internal navigation (Sidebar links, etc)
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // If it's a real link to another page and form is dirty
+                if (isFormDirty && this.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
+                    e.preventDefault();
+                    const targetUrl = this.href;
+                    openModal({
+                        type: 'amber',
+                        icon: 'ph-bold ph-warning',
+                        title: 'Tinggalkan Halaman?',
+                        desc: 'Anda memiliki data yang sedang diisi namun belum disimpan. Jika Anda pergi, perubahan tersebut akan hilang.',
+                        actions: `
+                            <button class="modal-btn mb-red" onclick="isFormDirty=false; window.location.href='${targetUrl}'">Ya, Tinggalkan Halaman</button>
+                            <button class="modal-btn mb-ghost" onclick="closeModal()">Kembali Mengedit</button>
+                        `
+                    });
+                }
+            });
+        });
     });
 
     // Clear error on input
     document.querySelectorAll('input, select').forEach(el => {
         el.addEventListener('input', () => el.classList.remove('err'));
     });
+
+    // --- Dynamic Search / Autocomplete ---
+    function setupAutocomplete(inputId, dropdownId) {
+        const input = document.getElementById(inputId);
+        const dropdown = document.getElementById(dropdownId);
+        let timeout = null;
+
+        input.addEventListener('input', function() {
+            clearTimeout(timeout);
+            const query = this.value.trim();
+            
+            if (query.length < 2) {
+                dropdown.classList.remove('show');
+                return;
+            }
+
+            timeout = setTimeout(() => {
+                fetch(`/api/doctors/search?q=${encodeURIComponent(query)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            dropdown.innerHTML = data.map(doc => `
+                                <div class="autocomplete-item" data-name="${doc.nama_dokter}" data-spesialisasi="${doc.spesialisasi || 'Dokter Umum'}">
+                                    <strong>${doc.nama_dokter}</strong>
+                                    <small>SIP: ${doc.nomor_sip || 'Belum diatur'}</small>
+                                </div>
+                            `).join('');
+                            dropdown.classList.add('show');
+                            
+                            // Attach click event
+                            dropdown.querySelectorAll('.autocomplete-item').forEach(item => {
+                                item.addEventListener('click', function() {
+                                    input.value = this.getAttribute('data-name');
+                                    if (inputId === 'nama_pembuat') {
+                                        const jabInput = document.getElementById('jabatan');
+                                        if (jabInput) {
+                                            jabInput.value = this.getAttribute('data-spesialisasi');
+                                            jabInput.classList.remove('err');
+                                        }
+                                    }
+                                    dropdown.classList.remove('show');
+                                    isFormDirty = true;
+                                });
+                            });
+                        } else {
+                            dropdown.innerHTML = `<div class="autocomplete-item" style="cursor:default"><em>Tidak ditemukan</em></div>`;
+                            dropdown.classList.add('show');
+                        }
+                    })
+                    .catch(err => console.error('Error fetching doctors:', err));
+            }, 300);
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    }
+
+    setupAutocomplete('nama_pembuat', 'dropdown_pembuat');
+    setupAutocomplete('dpjp', 'dropdown_dpjp');
+
 </script>
 </body>
 </html>

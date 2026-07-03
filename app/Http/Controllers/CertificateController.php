@@ -8,11 +8,37 @@ use App\Models\ActivityLog;
 
 class CertificateController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $certificates = Certificate::with(['patient', 'doctor'])
-            ->orderBy('updated_at', 'desc')
-            ->paginate(15);
+        $query = Certificate::with(['patient', 'doctor']);
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = strtolower($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('nomor_sertifikat', 'like', "%{$search}%")
+                  ->orWhereHas('patient', function($pq) use ($search) {
+                      $pq->where('nama_lengkap', 'like', "%{$search}%")
+                         ->orWhere('nrm', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->has('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('type') && $request->type !== 'all') {
+            $query->where('jenis', $request->type);
+        }
+
+        if ($request->has('doa') && $request->doa == '1') {
+            $query->where(function ($q) {
+                $q->where('data->doa', 'Ya')
+                  ->orWhere('data->doa_bayi', 'Ya');
+            });
+        }
+
+        $certificates = $query->orderBy('updated_at', 'desc')->paginate(15)->appends($request->all());
 
         return view('simpk.certificates', compact('certificates'));
     }
@@ -85,7 +111,6 @@ class CertificateController extends Controller
                 // Bayi
                 $nrmBayi = $formData['nrm_bayi'] ?? null;
                 $namaBayi = $formData['nama_bayi'] ?? null;
-                $namaIbu = $formData['nama_ibu'] ?? null;
 
                 if ($nrmBayi) {
                     $existing = Certificate::where('data->nrm_bayi', $nrmBayi)->first();
@@ -97,15 +122,18 @@ class CertificateController extends Controller
                     }
                 }
 
-                if ($namaBayi && $namaIbu) {
-                    $existing = Certificate::where('data->nama_bayi', $namaBayi)
-                        ->where('data->nama_ibu', $namaIbu)
-                        ->first();
-                    if ($existing) {
-                        return response()->json([
-                            'success' => false, 
-                            'message' => 'Redundansi Data: Sertifikat untuk ' . $namaBayi . ' (Ibu: ' . $namaIbu . ') sudah ada.'
-                        ], 422);
+                if ($namaBayi) {
+                    $tglLahir = $formData['tanggal_lahir_bayi'] ?? null;
+                    if ($tglLahir) {
+                        $existing = Certificate::where('data->nama_bayi', $namaBayi)
+                            ->where('data->tanggal_lahir_bayi', $tglLahir)
+                            ->first();
+                        if ($existing) {
+                            return response()->json([
+                                'success' => false, 
+                                'message' => 'Redundansi Data: Sertifikat untuk bayi ' . $namaBayi . ' (lahir: ' . $tglLahir . ') sudah ada.'
+                            ], 422);
+                        }
                     }
                 }
             }
@@ -129,13 +157,13 @@ class CertificateController extends Controller
         } else {
             // Bayi
             $nrm = !empty($formData['nrm_bayi']) ? $formData['nrm_bayi'] : null;
-            $nik = !empty($formData['nik_ibu']) ? $formData['nik_ibu'] : null;
+            $nik = null;
             $patientData = [
                 'nik' => $nik,
-                'nama_lengkap' => !empty($formData['nama_bayi']) ? $formData['nama_bayi'] : (!empty($formData['nama_ibu']) ? 'Bayi Ny. ' . $formData['nama_ibu'] : 'Bayi Unknown'),
+                'nama_lengkap' => !empty($formData['nama_bayi']) ? $formData['nama_bayi'] : 'Bayi Unknown',
                 'jenis_kelamin' => (isset($formData['gender_bayi']) && $formData['gender_bayi'] === 'Laki-laki') ? 'L' : 'P',
                 'tanggal_lahir' => !empty($formData['tanggal_lahir_bayi']) ? $formData['tanggal_lahir_bayi'] : null,
-                'alamat' => $formData['alamat_ibu'] ?? null,
+                'alamat' => null,
             ];
         }
 
@@ -180,28 +208,36 @@ class CertificateController extends Controller
             }
         }
 
-        // Doctor resolution
+        // Doctor resolution - lookup by name first, then by SIP
         $sip = $formData['nomor_sip'] ?? null;
         $namaDokter = $formData['nama_dokter'] ?? null;
         $doctor = null;
 
-        if (!empty($sip)) {
+        if (!empty($namaDokter)) {
+            $doctor = \App\Models\Doctor::where('nama_dokter', $namaDokter)->first();
+        }
+
+        if (!$doctor && !empty($sip)) {
             $doctor = \App\Models\Doctor::where('nomor_sip', $sip)->first();
-            if ($doctor) {
-                $doctor->update(['nama_dokter' => $namaDokter ?? $doctor->nama_dokter]);
-            } else {
-                $doctor = \App\Models\Doctor::create([
-                    'nomor_sip' => $sip,
-                    'nama_dokter' => $namaDokter ?? 'Dr. Unknown',
-                    'spesialisasi' => ($jenis === 'Bayi') ? 'Anak' : 'Umum'
-                ]);
+        }
+
+        if ($doctor) {
+            // Update SIP if provided and different
+            if (!empty($sip) && $sip !== $doctor->nomor_sip) {
+                $doctor->update(['nomor_sip' => $sip]);
             }
+        } elseif (!empty($namaDokter)) {
+            $doctor = \App\Models\Doctor::create([
+                'nama_dokter' => $namaDokter,
+                'nomor_sip' => $sip ?: null,
+                'spesialisasi' => ($jenis === 'Bayi') ? 'Anak' : 'Umum'
+            ]);
         }
 
         if (!$doctor) {
             $doctor = \App\Models\Doctor::first() ?? \App\Models\Doctor::create([
                 'nama_dokter' => 'Dr. Default',
-                'nomor_sip' => 'SIP/TEMP-' . time(),
+                'nomor_sip' => null,
                 'spesialisasi' => 'Umum'
             ]);
         }
@@ -352,18 +388,14 @@ class CertificateController extends Controller
                 'penyebab_a' => 'Penyebab Kematian (a)',
                 'fucod' => 'FUCOD (Deskripsi)',
                 'nama_dokter' => 'Nama Dokter',
-                'nomor_sip' => 'Nomor SIP Dokter'
             ];
         } else {
             $check = [
                 'nama_bayi' => 'Nama Bayi',
                 'tanggal_lahir_bayi' => 'Tanggal Lahir Bayi',
                 'tanggal_meninggal_bayi' => 'Tanggal Meninggal Bayi',
-                'jam_meninggal_bayi' => 'Jam Meninggal Bayi',
                 'penyebab_utama_bayi' => 'Penyebab Kematian Utama (Bayi)',
-                'icd_fucod_bayi' => 'Kode ICD FUCoD',
                 'nama_dokter' => 'Nama Dokter',
-                'nomor_sip' => 'Nomor SIP Dokter'
             ];
         }
 

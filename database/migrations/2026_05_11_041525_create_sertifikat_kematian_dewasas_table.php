@@ -16,33 +16,33 @@ return new class extends Migration
             
             // Identitas Jenazah
             $table->string('nik', 16);
-            $table->string('nama_lengkap');
+            $table->string('nama_lengkap', 500);
             $table->enum('jenis_kelamin', ['L', 'P']);
-            $table->string('tempat_lahir');
+            $table->string('tempat_lahir', 500);
             $table->date('tanggal_lahir');
-            $table->string('pekerjaan')->nullable();
+            $table->string('pekerjaan', 500)->nullable();
             
             // Waktu Kematian
             $table->dateTime('waktu_meninggal');
             $table->integer('usia');
             
             // Penyebab Kematian (WHO)
-            $table->string('penyebab_langsung')->nullable();
-            $table->string('interval_langsung')->nullable();
+            $table->string('penyebab_langsung', 500)->nullable();
+            $table->string('interval_langsung', 500)->nullable();
             
-            $table->string('penyebab_antara')->nullable();
-            $table->string('interval_antara')->nullable();
+            $table->string('penyebab_antara', 500)->nullable();
+            $table->string('interval_antara', 500)->nullable();
             
-            $table->string('penyebab_dasar')->nullable();
-            $table->string('interval_dasar')->nullable();
+            $table->string('penyebab_dasar', 500)->nullable();
+            $table->string('interval_dasar', 500)->nullable();
             
-            $table->string('penyebab_utama')->nullable();
-            $table->string('interval_utama')->nullable();
+            $table->string('penyebab_utama', 500)->nullable();
+            $table->string('interval_utama', 500)->nullable();
             
             // Pengesahan
-            $table->string('nama_dokter');
-            $table->string('nomor_sip');
-            $table->string('tanda_tangan');
+            $table->string('nama_dokter', 500);
+            $table->string('nomor_sip', 500);
+            $table->string('tanda_tangan', 1000);
 
             $table->timestamps();
         });

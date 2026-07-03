@@ -5,6 +5,11 @@
 
     RewriteEngine On
 
+    # Bypass Laravel for deployment utility scripts
+    RewriteRule ^update\.php$ - [L]
+    RewriteRule ^clean\.php$ - [L]
+    RewriteRule ^unzip\.php$ - [L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

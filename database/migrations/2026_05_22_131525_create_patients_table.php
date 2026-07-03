@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('nrm', 50)->unique();
             $table->string('nik', 16)->unique()->nullable();
-            $table->string('nama_lengkap');
+            $table->string('nama_lengkap', 500);
             $table->enum('jenis_kelamin', ['L', 'P']);
-            $table->string('tempat_lahir')->nullable();
+            $table->string('tempat_lahir', 500)->nullable();
             $table->date('tanggal_lahir')->nullable();
-            $table->string('pekerjaan')->nullable();
+            $table->string('pekerjaan', 500)->nullable();
             $table->text('alamat')->nullable();
             $table->timestamps();
         });

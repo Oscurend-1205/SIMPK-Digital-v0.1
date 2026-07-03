@@ -158,8 +158,8 @@
                         <tr>
                             <td class="td-cert-no">{{ $draft->nomor_sertifikat }}</td>
                             <td>
-                                <div class="td-name">{{ $draft->patient->nama_lengkap }}</div>
-                                <div class="td-rm">RM: {{ $draft->patient->nrm }}</div>
+                                <div class="td-name">{{ $draft->patient?->nama_lengkap ?? '-' }}</div>
+                                <div class="td-rm">RM: {{ $draft->patient?->nrm ?? '-' }}</div>
                             </td>
                             <td><span class="type-badge">{{ $draft->jenis }}</span></td>
                             <td class="td-muted">{{ $draft->updated_at->format('d M Y, H:i') }}</td>

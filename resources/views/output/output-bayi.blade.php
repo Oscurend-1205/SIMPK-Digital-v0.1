@@ -134,8 +134,8 @@
         .form-table { width: 100%; border-collapse: collapse; }
         .form-table td {
             border: 1px solid var(--rule);
-            padding: 4px 7px;
-            font-size: 11.4px;
+            padding: 3px 6px;
+            font-size: 10.8px;
             vertical-align: middle;
         }
         .lbl { background: var(--bg-cell); font-weight: 600; color: var(--ink-mid); white-space: nowrap; }
@@ -143,7 +143,7 @@
         /* ── CHECKBOX ─────────────────────────────────── */
         .cb {
             display: inline-block;
-            width: 13px; height: 13px;
+            width: 12px; height: 12px;
             border: 1.5px solid var(--ink);
             vertical-align: middle;
             margin-right: 3px; position: relative;
@@ -151,30 +151,29 @@
         .cb.on::after {
             content: '✓';
             position: absolute; top: -4px; left: 1px;
-            font-size: 13px; font-weight: 800; color: var(--ink);
+            font-size: 12px; font-weight: 800; color: var(--ink);
         }
 
         /* ── 2-col grid ───────────────────────────────── */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; }
 
         /* ── info panel ───────────────────────────────── */
         .info-panel {
             border: 1px solid var(--rule);
-            padding: 7px 9px;
-            font-size: 10.8px;
+            padding: 5px 8px;
+            font-size: 10.2px;
             background: var(--bg-cell);
         }
         .info-panel .kv { display: flex; gap: 4px; margin-bottom: 2px; }
-        .info-panel .k { font-weight: 600; color: var(--ink-mid); min-width: 70px; }
+        .info-panel .k { font-weight: 600; color: var(--ink-mid); min-width: 90px; }
 
         /* ── age display ─────────────────────────────── */
         .age-display {
             border: 1px solid var(--rule);
-            height: 58px;
+            height: 48px;
             display: flex; align-items: center; justify-content: center;
         }
-        .age-val { font-size: 26.4px; font-weight: 800; color: #00A1C5; letter-spacing: -.03em; }
-        .age-unit { font-size: 9.6px; font-weight: 700; color: var(--ink-lt); text-transform: uppercase; margin-left: 4px; }
+        .age-val { font-size: 18px; font-weight: 800; color: #00A1C5; letter-spacing: -.03em; text-align: center; }
 
         /* ── FUCoD bar ───────────────────────────────── */
         .fucod-bar {
@@ -186,18 +185,18 @@
         .fucod-label { font-size: 9px; font-weight: 700; color: var(--ink-lt); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 2px; }
         .fucod-val { font-size: 15.6px; font-weight: 800; color: var(--ink); text-transform: uppercase; }
         .fucod-icd { border-left: 1px solid var(--rule); padding-left: 12px; text-align: right; }
-        .fucod-icd-val { font-size: 24px; font-weight: 800; color: #00A1C5; font-family: 'IBM Plex Mono', monospace; }
+        .fucod-icd-val { font-size: 20px; font-weight: 800; color: #00A1C5; font-family: 'IBM Plex Mono', monospace; }
 
         /* ── SIGNATURE ────────────────────────────────── */
-        .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; text-align: center; margin-top: 8px; }
-        .sig-role { font-size: 10.8px; font-weight: 700; text-transform: uppercase; color: var(--ink-lt); margin-bottom: 70px; letter-spacing: .05em; }
+        .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; text-align: center; margin-top: 6px; }
+        .sig-role { font-size: 10.2px; font-weight: 700; text-transform: uppercase; color: var(--ink-lt); margin-bottom: 50px; letter-spacing: .05em; }
         .sig-line { border-top: 1.5px solid var(--rule); width: 160px; margin: 0 auto; }
         .sig-name { font-size: 11.4px; font-weight: 800; text-transform: uppercase; margin-top: 3px; }
         .sig-sub  { font-size: 10.2px; color: var(--ink-lt); font-style: italic; }
 
         /* ── FOOTER ───────────────────────────────────── */
         .doc-footer {
-            margin-top: 8px; padding-top: 4px;
+            margin-top: 6px; padding-top: 4px;
             border-top: 1px solid var(--rule);
             text-align: center;
             font-size: 8.4px; font-weight: 700;
@@ -311,49 +310,42 @@
         </div>
 
         <div style="margin-bottom:6px">
-            <div class="sec-head">1. Identitas Jenazah Bayi</div>
+            <div class="sec-head">1. Identitas Bayi</div>
             <table class="form-table">
                 <tbody>
                     <tr>
-                        <td class="lbl" style="width:22%">No. Rekam Medis</td>
-                        <td style="width:28%">{{ $certificate->data['nrm_bayi'] ?? ($certificate->data['nrm'] ?? '-') }}</td>
+                        <td class="lbl" style="width:22%">No. RM Bayi</td>
+                        <td style="width:28%">{{ $certificate->data['nrm_bayi'] ?? '-' }}</td>
                         <td class="lbl" style="width:22%">No. RM Ibu</td>
                         <td>{{ $certificate->data['nrm_ibu'] ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td class="lbl">Nama Bayi</td>
                         <td colspan="3" style="font-weight:700;text-transform:uppercase">
-                            {{ !empty($certificate->data['nama_bayi']) ? $certificate->data['nama_bayi'] : (!empty($certificate->data['nama_lengkap']) ? $certificate->data['nama_lengkap'] : 'BY. NY. ' . ($certificate->data['nama_ibu'] ?? 'UNKNOWN')) }}
+                            {{ !empty($certificate->data['nama_bayi']) ? $certificate->data['nama_bayi'] : 'BY. NY. ' . ($certificate->data['nama_ibu'] ?? 'UNKNOWN') }}
                         </td>
                     </tr>
                     <tr>
                         <td class="lbl">Jenis Kelamin</td>
                         <td>
-                            <span class="cb {{ (($certificate->data['gender_bayi'] ?? ($certificate->data['gender'] ?? '')) === 'Laki-laki') ? 'on' : '' }}"></span> Laki-laki &nbsp;
-                            <span class="cb {{ (($certificate->data['gender_bayi'] ?? ($certificate->data['gender'] ?? '')) === 'Perempuan') ? 'on' : '' }}"></span> Perempuan
+                            <span class="cb {{ ($certificate->data['gender_bayi'] ?? '') === 'Laki-laki' ? 'on' : '' }}"></span> Laki-laki &nbsp;
+                            <span class="cb {{ ($certificate->data['gender_bayi'] ?? '') === 'Perempuan' ? 'on' : '' }}"></span> Perempuan
                         </td>
                         <td class="lbl">Agama Ibu</td>
-                        <td>{{ $certificate->data['agama_ibu'] ?? ($certificate->data['agama'] ?? '-') }}</td>
+                        <td>{{ $certificate->data['agama_ibu'] ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td class="lbl">Tanggal Lahir</td>
                         <td>
-                            @php
-                                $tglLahir = $certificate->data['tanggal_lahir_bayi'] ?? ($certificate->data['tanggal_lahir'] ?? null);
-                            @endphp
-                            {{ $tglLahir ? \Carbon\Carbon::parse($tglLahir)->translatedFormat('d F Y') : '-' }}
+                            {{ isset($certificate->data['tanggal_lahir_bayi']) && $certificate->data['tanggal_lahir_bayi'] ? \Carbon\Carbon::parse($certificate->data['tanggal_lahir_bayi'])->translatedFormat('d F Y') : '-' }}
                         </td>
                         <td class="lbl">Waktu Lahir</td>
-                        <td>{{ $certificate->data['jam_lahir_bayi'] ?? ($certificate->data['jam_lahir'] ?? '-') }} WIB</td>
+                        <td>{{ $certificate->data['jam_lahir_bayi'] ?? '-' }} WIB</td>
                     </tr>
                     <tr>
                         <td class="lbl">Alamat Orang Tua</td>
                         <td colspan="3" style="font-size:10.2px">
-                            @if(!empty($certificate->data['alamat_ibu']))
-                                {{ $certificate->data['alamat_ibu'] }}
-                            @else
-                                {{ $certificate->data['alamat'] ?? '-' }}{{ !empty($certificate->data['kelurahan']) ? ', Kel. ' . $certificate->data['kelurahan'] : '' }}{{ !empty($certificate->data['kecamatan']) ? ', Kec. ' . $certificate->data['kecamatan'] : '' }}{{ !empty($certificate->data['kab_kota']) ? ', ' . $certificate->data['kab_kota'] : '' }}
-                            @endif
+                            {{ $certificate->data['alamat_ibu'] ?? '-' }}{{ !empty($certificate->data['kelurahan_ibu']) ? ', Kel. ' . $certificate->data['kelurahan_ibu'] : '' }}{{ !empty($certificate->data['kecamatan_ibu']) ? ', Kec. ' . $certificate->data['kecamatan_ibu'] : '' }}{{ !empty($certificate->data['kab_kota_ibu']) ? ', ' . $certificate->data['kab_kota_ibu'] : '' }}{{ !empty($certificate->data['provinsi_ibu']) ? ', Prov. ' . $certificate->data['provinsi_ibu'] : '' }}
                         </td>
                     </tr>
                 </tbody>
@@ -362,85 +354,55 @@
 
         <div class="grid-2">
             <div>
-                <div class="sec-head-light">2. Pernyataan Meninggal</div>
-                @php
-                    $tglKematian = $certificate->data['tanggal_meninggal_bayi'] ?? ($certificate->data['tanggal_kematian'] ?? null);
-                    $hariKematian = '-';
-                    if ($tglKematian) {
-                        $hariKematian = \Carbon\Carbon::parse($tglKematian)->translatedFormat('l');
-                    }
-                @endphp
+                <div class="sec-head-light">2. Informasi Kematian</div>
                 <table class="form-table">
                     <tr>
                         <td class="lbl" style="width:45%">Hari / Tanggal</td>
+                        @php
+                            $tglKematian = $certificate->data['tanggal_meninggal_bayi'] ?? null;
+                            $hariKematian = $tglKematian ? \Carbon\Carbon::parse($tglKematian)->translatedFormat('l') : '-';
+                        @endphp
                         <td>{{ $hariKematian }}, {{ $tglKematian ? \Carbon\Carbon::parse($tglKematian)->translatedFormat('d M Y') : '-' }}</td>
                     </tr>
                     <tr>
                         <td class="lbl">Waktu Kematian</td>
-                        <td>{{ $certificate->data['jam_meninggal_bayi'] ?? ($certificate->data['jam_kematian'] ?? '-') }} WIB</td>
+                        <td>{{ $certificate->data['jam_meninggal_bayi'] ?? '-' }} WIB</td>
                     </tr>
                 </table>
             </div>
             <div>
-                <div class="sec-head-light">3. Umur Saat Meninggal</div>
+                <div class="sec-head-light">3. Status Kematian</div>
                 <div class="age-display">
-                    @if(($certificate->data['lahir_mati'] ?? '') === 'Ya')
-                        <span class="age-val" style="font-size: 18px;">Lahir Mati</span>
-                    @elseif(isset($certificate->data['umur_hari']) && $certificate->data['umur_hari'] !== '')
-                        <span class="age-val">{{ $certificate->data['umur_hari'] }}</span>
-                        <span class="age-unit">Hari</span>
-                    @elseif(isset($certificate->data['umur_bulan']) && $certificate->data['umur_bulan'] !== '')
-                        <span class="age-val">{{ $certificate->data['umur_bulan'] }}</span>
-                        <span class="age-unit">Bulan</span>
-                    @elseif(isset($certificate->data['umur_tahun']) && $certificate->data['umur_tahun'] !== '')
-                        <span class="age-val">{{ $certificate->data['umur_tahun'] }}</span>
-                        <span class="age-unit">Tahun</span>
-                    @else
-                        <span class="age-val">-</span>
-                    @endif
+                    @php
+                        $meninggalSaat = $certificate->data['meninggal_saat'] ?? '-';
+                        if (($certificate->data['lahir_mati'] ?? '') === 'Ya' && $meninggalSaat === '-') {
+                            $meninggalSaat = 'Sebelum Lahir';
+                        }
+                    @endphp
+                    <span class="age-val" style="font-size: 16px; text-transform: uppercase;">{{ $meninggalSaat }}</span>
                 </div>
             </div>
         </div>
 
         <div class="grid-2">
-            <div>
-                <div class="sec-head-light">4. Informasi Ibu &amp; Kehamilan</div>
-                <div class="info-panel" style="height:68px;display:flex;flex-direction:column;justify-content:center;gap:3px">
-                    <div class="kv"><span class="k" style="min-width: 95px;">Nama Ibu</span><span>: {{ $certificate->data['nama_ibu'] ?? '-' }}</span></div>
-                    <div class="kv"><span class="k" style="min-width: 95px;">Umur Ibu</span><span>: {{ $certificate->data['umur_ibu'] ?? '-' }} Tahun</span></div>
-                    <div class="kv"><span class="k" style="min-width: 95px;">Usia Gestasi</span><span>: {{ $certificate->data['usia_kehamilan'] ?? ($certificate->data['usia_kehamilan_minggu'] ?? '-') }} Minggu</span></div>
+            <div style="display:flex;flex-direction:column">
+                <div class="sec-head-light">4. Kondisi Lahir &amp; Perawatan</div>
+                <div class="info-panel" style="flex:1;min-height:86px;display:flex;flex-direction:column;justify-content:center;gap:3px">
+                    <div class="kv"><span class="k">Berat Lahir</span><span>: {{ $certificate->data['berat_badan_lahir'] ?? '-' }} gram</span></div>
+                    <div class="kv"><span class="k">Lama Rawat</span><span>: {{ $certificate->data['lama_perawatan_bayi'] ?? '0' }} Hari/Jam</span></div>
+                    <div class="kv"><span class="k">Resusitasi</span><span>: {{ $certificate->data['resusitasi'] ?? 'Tidak' }}</span></div>
+                    <div class="kv"><span class="k">DOA</span><span>: {{ $certificate->data['doa_bayi'] ?? 'Tidak' }}</span></div>
+                    <div class="kv"><span class="k">APGAR Score</span><span>: 1 mnt ({{ $certificate->data['apgar_1'] ?? '-' }}), 5 mnt ({{ $certificate->data['apgar_5'] ?? '-' }})</span></div>
                 </div>
             </div>
-            <div>
-                <div class="sec-head-light">5. Spesifikasi Lahir &amp; Kematian</div>
-                <div class="info-panel" style="height:68px;display:flex;flex-direction:column;justify-content:center;gap:3px">
-                    @php
-                        $meninggalSaat = $certificate->data['meninggal_saat'] ?? '';
-                        
-                        $umurHari = $certificate->data['umur_hari'] ?? '';
-                        $umurBulan = $certificate->data['umur_bulan'] ?? '';
-                        $umurTahun = $certificate->data['umur_tahun'] ?? '';
-                        $lahirMati = $certificate->data['lahir_mati'] ?? '';
-
-                        // If any age field is filled, it must be Setelah Lahir
-                        if (($umurHari !== '' && floatval($umurHari) >= 0) || ($umurBulan !== '' && floatval($umurBulan) >= 0) || ($umurTahun !== '' && floatval($umurTahun) >= 0)) {
-                            $meninggalSaat = 'Setelah Lahir';
-                        } elseif ($lahirMati === 'Ya') {
-                            // If stillbirth, default to Sebelum Lahir unless form specifically set Saat Lahir
-                            if ($meninggalSaat !== 'Sebelum Lahir' && $meninggalSaat !== 'Saat Lahir') {
-                                $meninggalSaat = 'Sebelum Lahir';
-                            }
-                        } elseif ($lahirMati === 'Tidak') {
-                            $meninggalSaat = 'Setelah Lahir';
-                        }
-
-                        if (empty($meninggalSaat)) {
-                            $meninggalSaat = '-';
-                        }
-                    @endphp
-                    <div class="kv"><span class="k" style="min-width: 95px;">Berat Lahir</span><span>: {{ $certificate->data['berat_badan_lahir'] ?? ($certificate->data['berat_lahir_gram'] ?? '-') }} gram</span></div>
-                    <div class="kv"><span class="k" style="min-width: 95px;">Jenis Kelahiran</span><span>: {{ $certificate->data['jenis_persalinan'] ?? '-' }}</span></div>
-                    <div class="kv"><span class="k" style="min-width: 95px;">Meninggal Saat</span><span>: {{ $meninggalSaat }}</span></div>
+            <div style="display:flex;flex-direction:column">
+                <div class="sec-head-light">5. Kondisi Ibu &amp; Kehamilan</div>
+                <div class="info-panel" style="flex:1;min-height:86px;display:flex;flex-direction:column;justify-content:center;gap:3px">
+                    <div class="kv"><span class="k">Nama Ibu</span><span>: {{ $certificate->data['nama_ibu'] ?? '-' }} ({{ $certificate->data['umur_ibu'] ?? '-' }} Thn)</span></div>
+                    <div class="kv"><span class="k">Usia Gestasi</span><span>: {{ $certificate->data['usia_kehamilan'] ?? '-' }} Minggu</span></div>
+                    <div class="kv"><span class="k">Gravida/Para</span><span>: G{{ $certificate->data['gravida'] ?? '-' }} P{{ $certificate->data['para'] ?? '-' }}</span></div>
+                    <div class="kv"><span class="k">Hamil Kembar</span><span>: {{ $certificate->data['kehamilan_kembar'] ?? 'Tidak' }}</span></div>
+                    <div class="kv"><span class="k">Ketuban/Kmpl.</span><span>: {{ $certificate->data['kondisi_ketuban'] ?? '-' }} / {{ $certificate->data['komplikasi_persalinan'] ?? '-' }}</span></div>
                 </div>
             </div>
         </div>
@@ -448,80 +410,84 @@
         <div class="grid-2">
             <div class="info-panel">
                 <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-lt);margin-bottom:5px">6. Dasar Diagnosis</div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:10.8px">
-                    <div><span class="cb {{ !empty($certificate->data['dasar_rekam_medis']) ? 'on' : '' }}"></span> Rekam Medis</div>
-                    <div><span class="cb {{ !empty($certificate->data['dasar_pemeriksaan_bayi']) ? 'on' : '' }}"></span> Periksa Bayi</div>
-                    <div><span class="cb {{ !empty($certificate->data['dasar_pemeriksaan_penunjang']) ? 'on' : '' }}"></span> Penunjang</div>
-                    <div><span class="cb {{ !empty($certificate->data['dasar_autopsi']) ? 'on' : '' }}"></span> Autopsi</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:10.2px">
+                    <div><span class="cb {{ isset($certificate->data['dasar_rekam_medis']) && $certificate->data['dasar_rekam_medis'] ? 'on' : '' }}"></span> Rekam Medis</div>
+                    <div><span class="cb {{ isset($certificate->data['dasar_pemeriksaan_bayi']) && $certificate->data['dasar_pemeriksaan_bayi'] ? 'on' : '' }}"></span> Periksa Bayi</div>
+                    <div><span class="cb {{ isset($certificate->data['dasar_pemeriksaan_penunjang']) && $certificate->data['dasar_pemeriksaan_penunjang'] ? 'on' : '' }}"></span> Penunjang</div>
+                    <div><span class="cb {{ isset($certificate->data['dasar_autopsi']) && $certificate->data['dasar_autopsi'] ? 'on' : '' }}"></span> Autopsi</div>
+                    <div style="grid-column: span 2"><span class="cb {{ isset($certificate->data['dasar_surat_keterangan']) && $certificate->data['dasar_surat_keterangan'] ? 'on' : '' }}"></span> Surat Keterangan Lain</div>
                 </div>
             </div>
-            @php
-                $babyConds = [];
-                if (!empty($certificate->data['cond_prematuritas'])) $babyConds[] = 'Prematuritas';
-                if (!empty($certificate->data['cond_asfiksia'])) $babyConds[] = 'Asfiksia';
-                if (!empty($certificate->data['cond_infeksi'])) $babyConds[] = 'Infeksi';
-                if (!empty($certificate->data['cond_kongenital'])) $babyConds[] = 'Kongenital';
-                if (!empty($certificate->data['cond_sepsis'])) $babyConds[] = 'Sepsis';
-                if (!empty($certificate->data['cond_bblr'])) $babyConds[] = 'BBLR';
-                if (!empty($certificate->data['cond_lainnya_bayi']) && !empty($certificate->data['cond_lainnya_bayi_ket'])) {
-                    $babyConds[] = $certificate->data['cond_lainnya_bayi_ket'];
-                }
-                $babyCondsStr = implode(', ', $babyConds) ?: '-';
-
-                $matConds = [];
-                if (!empty($certificate->data['mat_kehamilan_komplikasi'])) $matConds[] = 'Komplikasi Hamil';
-                if (!empty($certificate->data['mat_persalinan_komplikasi'])) $matConds[] = 'Komplikasi Lahir';
-                if (!empty($certificate->data['mat_nifas_komplikasi'])) $matConds[] = 'Komplikasi Nifas';
-                if (!empty($certificate->data['mat_penyakit_ibu'])) $matConds[] = 'Penyakit Ibu';
-                if (!empty($certificate->data['mat_lainnya']) && !empty($certificate->data['mat_lainnya_ket'])) {
-                    $matConds[] = $certificate->data['mat_lainnya_ket'];
-                }
-                $matCondsStr = implode(', ', $matConds) ?: '-';
-            @endphp
             <div class="info-panel" style="display:flex;flex-direction:column;justify-content:center;gap:3px;font-size:10.2px;">
-                <div><span style="font-weight:600;color:var(--ink-mid);">Kondisi Bayi:</span> <span style="font-weight:500;">{{ $babyCondsStr }}</span></div>
-                <div style="border-top:1px dashed var(--rule);padding-top:2px;margin-top:2px;"><span style="font-weight:600;color:var(--ink-mid);">Kondisi Ibu:</span> <span style="font-weight:500;">{{ $matCondsStr }}</span></div>
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-lt);margin-bottom:2px">7. Faktor Maternal Utama</div>
+                @php
+                    $faktorMat = $certificate->data['faktor_maternal'] ?? '-';
+                    $faktorDesc = '-';
+                    if ($faktorMat === 'M1') $faktorDesc = 'Komplikasi plasenta, tali pusat, selaput ketuban';
+                    elseif ($faktorMat === 'M2') $faktorDesc = 'Komplikasi kehamilan ibu';
+                    elseif ($faktorMat === 'M3') $faktorDesc = 'Komplikasi inpartu dan persalinan';
+                    elseif ($faktorMat === 'M4') $faktorDesc = 'Kondisi medis dan operasi ibu';
+                    elseif ($faktorMat === 'M5') $faktorDesc = 'Tidak ada komplikasi kondisi ibu';
+                    elseif ($faktorMat === 'M6') $faktorDesc = $certificate->data['faktor_maternal_m6_ket'] ?? 'Kondisi/penyakit lainnya';
+                @endphp
+                <div style="font-weight:600;color:var(--ink);line-height:1.3;">
+                    @if($faktorMat !== '-') <span style="color:#00A1C5;font-weight:800;">[{{ $faktorMat }}]</span> @endif 
+                    {{ $faktorDesc }}
+                </div>
             </div>
         </div>
 
         <div style="margin-bottom:6px">
-            <div class="sec-head-light">8. Kondisi &amp; Penyebab Kematian Perinatal (Cause of Death)</div>
+            <div class="sec-head-light">8. Penyebab Kematian (Cause of Death)</div>
             <table class="form-table">
                 <thead>
                     <tr style="background:var(--bg-cell);text-align:center;font-size:10.2px;font-weight:700">
-                        <td style="width:75%">Kategori Kondisi Utama / Kontributor</td>
-                        <td style="width:25%">Kode ICD-10</td>
+                        <td style="width:68%">Kondisi Medis / Diagnosis</td>
+                        <td style="width:16%">Interval</td>
+                        <td style="width:16%">Kode ICD-10</td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><b style="color:var(--ink-mid);margin-right:4px">a.</b> Kondisi Utama Bayi (Main disease/condition in fetus or infant):<br><span style="padding-left:14px;font-weight:500;">{{ $certificate->data['penyebab_utama_bayi'] ?? ($certificate->data['penyebab_a'] ?? '-') }}</span></td>
-                        <td style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:10.8px">{{ $certificate->data['icd_penyebab_bayi'] ?? ($certificate->data['icd_a'] ?? '-') }}</td>
+                        <td><b style="color:var(--ink-mid);margin-right:4px">a.</b> Penyebab Utama Kematian Bayi:<br><span style="padding-left:14px;font-weight:500;">{{ $certificate->data['penyebab_utama_bayi'] ?? '-' }}</span></td>
+                        <td style="text-align:center;font-size:10.8px">{{ $certificate->data['interval_penyebab_utama_bayi'] ?? '-' }}</td>
+                        <td rowspan="3" style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:11px;vertical-align:middle;">
+                            ICD Bayi:<br>
+                            <span style="font-size:14px;color:#00A1C5;">{{ $certificate->data['icd_penyebab_bayi'] ?? '-' }}</span>
+                        </td>
                     </tr>
                     <tr>
-                        <td><b style="color:var(--ink-mid);margin-right:4px">b.</b> Kondisi Lain Bayi (Other diseases/conditions in fetus or infant):<br><span style="padding-left:14px;font-weight:500;">{{ $certificate->data['penyebab_lain_bayi'] ?? ($certificate->data['penyebab_b'] ?? '-') }}</span></td>
-                        <td style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:10.8px">-</td>
+                        <td><b style="color:var(--ink-mid);margin-right:4px">b.</b> Penyebab Antara Bayi:<br><span style="padding-left:14px;font-weight:500;">{{ $certificate->data['penyebab_antara_bayi'] ?? '-' }}</span></td>
+                        <td style="text-align:center;font-size:10.8px">{{ $certificate->data['interval_penyebab_antara_bayi'] ?? '-' }}</td>
                     </tr>
                     <tr>
-                        <td><b style="color:var(--ink-mid);margin-right:4px">c.</b> Kondisi Utama Ibu mempengaruhi janin (Main maternal disease affecting fetus):<br><span style="padding-left:14px;font-weight:500;">{{ $certificate->data['penyebab_utama_ibu'] ?? ($certificate->data['penyebab_c'] ?? '-') }}</span></td>
-                        <td style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:10.8px">{{ $certificate->data['icd_penyebab_maternal'] ?? ($certificate->data['icd_c'] ?? '-') }}</td>
+                        <td><b style="color:var(--ink-mid);margin-right:4px">c.</b> Penyebab Dasar Bayi (Underlying):<br><span style="padding-left:14px;font-weight:500;">{{ $certificate->data['penyebab_dasar_bayi'] ?? '-' }}</span></td>
+                        <td style="text-align:center;font-size:10.8px">{{ $certificate->data['interval_penyebab_dasar_bayi'] ?? '-' }}</td>
                     </tr>
                     <tr>
-                        <td><b style="color:var(--ink-mid);margin-right:4px">d.</b> Kondisi Lain Ibu mempengaruhi janin (Other maternal diseases affecting fetus):<br><span style="padding-left:14px;font-weight:500;">{{ $certificate->data['penyebab_lain_ibu'] ?? ($certificate->data['penyebab_d'] ?? '-') }}</span></td>
-                        <td style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:10.8px">-</td>
+                        <td><b style="color:var(--ink-mid);margin-right:4px">d.</b> Penyebab Utama Ibu (Maternal):<br><span style="padding-left:14px;font-weight:500;">{{ $certificate->data['penyebab_utama_ibu'] ?? '-' }}</span></td>
+                        <td style="text-align:center;font-size:10.8px">{{ $certificate->data['interval_penyebab_utama_ibu'] ?? '-' }}</td>
+                        <td rowspan="2" style="text-align:center;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:11px;vertical-align:middle;">
+                            ICD Ibu:<br>
+                            <span style="font-size:14px;color:#00A1C5;">{{ $certificate->data['icd_penyebab_maternal'] ?? '-' }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b style="color:var(--ink-mid);margin-right:4px">e.</b> Penyebab Pendukung Ibu:<br><span style="padding-left:14px;font-weight:500;">{{ $certificate->data['penyebab_pendukung_ibu'] ?? '-' }}</span></td>
+                        <td style="text-align:center;font-size:10.8px">{{ $certificate->data['interval_penyebab_pendukung_ibu'] ?? '-' }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="fucod-bar">
+        <div class="fucod-bar" style="margin-bottom:0">
             <div>
                 <div class="fucod-label">Final Underlying Cause of Death (FUCoD)</div>
-                <div class="fucod-val">{{ $certificate->data['penyebab_utama_bayi'] ?? ($certificate->data['fucod'] ?? '-') }}</div>
+                <div class="fucod-val">{{ $certificate->data['penyebab_dasar_bayi'] ?? ($certificate->data['penyebab_utama_bayi'] ?? '-') }}</div>
             </div>
             <div class="fucod-icd">
-                <div class="fucod-label">Kode ICD-10</div>
-                <div class="fucod-icd-val">{{ $certificate->data['icd_fucod_bayi'] ?? ($certificate->data['icd_fucod'] ?? '-') }}</div>
+                <div class="fucod-label">Kode ICD-10 Utama</div>
+                <div class="fucod-icd-val">{{ $certificate->data['icd_penyebab_bayi'] ?? '-' }}</div>
             </div>
         </div>
     </div>
@@ -530,15 +496,15 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; text-align: center; margin-bottom: 2px;">
             <div></div>
             <div style="font-size:10.2px;color:var(--ink-lt);">
-                Malang, {{ isset($certificate->data['tanggal_ttd']) ? \Carbon\Carbon::parse($certificate->data['tanggal_ttd'])->translatedFormat('d F Y') : '-' }}
+                Malang, {{ isset($certificate->data['tanggal_ttd']) && $certificate->data['tanggal_ttd'] ? \Carbon\Carbon::parse($certificate->data['tanggal_ttd'])->translatedFormat('d F Y') : '-' }}
             </div>
         </div>
         <div class="sig-grid" style="margin-top: 0px;">
             <div>
-                <div class="sig-role">Pihak Penerima / Keluarga Jenazah,</div>
+                <div class="sig-role">Pihak Penerima / Keluarga,</div>
                 <div class="sig-line"></div>
-                <div class="sig-name">{{ $certificate->data['nama_terang_penerima'] ?? '..................................' }}</div>
-                <div class="sig-sub">Hubungan: {{ $certificate->data['hubungan_bayi'] ?? ($certificate->data['hubungan_jenazah'] ?? '-') }}</div>
+                <div class="sig-name">..................................</div>
+                <div class="sig-sub">Hubungan: .......................</div>
             </div>
             <div>
                 <div class="sig-role">Dokter Penanggung Jawab,</div>
